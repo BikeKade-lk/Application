@@ -24,6 +24,29 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalArgumentException("Product name cannot be empty");
         }
         
+        if (product.getPrice() <= 0) {
+            throw new IllegalArgumentException("Price must be greater than zero");
+        }
+        
+        // Validate spare part specific fields
+        if ("spare part".equals(product.getProductType())) {
+            if (product.getBrand() == null || product.getBrand().trim().isEmpty()) {
+                throw new IllegalArgumentException("Brand is required for spare parts");
+            }
+            
+            if (product.getPartType() == null || product.getPartType().trim().isEmpty()) {
+                throw new IllegalArgumentException("Part type is required for spare parts");
+            }
+            
+            if (product.getBikeModel() == null || product.getBikeModel().trim().isEmpty()) {
+                throw new IllegalArgumentException("Bike model is required for spare parts");
+            }
+            
+            // Ensure bike model follows the format rules (uppercase, no spaces)
+            String bikeModel = product.getBikeModel().toUpperCase().replace(" ", "-");
+            product.setBikeModel(bikeModel);
+        }
+        
         // Handle potential large image data
         if (product.getImage() != null && product.getImage().length() > 1_000_000) {
             // If image is very large, you might want to compress it or handle it differently
@@ -65,6 +88,61 @@ public class ProductServiceImpl implements ProductService {
         
         if (product.getPrice() > 0) {
             existing.setPrice(product.getPrice());
+        }
+        
+        // Update product type fields
+        if (product.getProductType() != null) {
+            existing.setProductType(product.getProductType());
+            
+            // If product type is spare part, validate and update related fields
+            if ("spare part".equals(product.getProductType())) {
+                if (product.getBrand() != null && !product.getBrand().trim().isEmpty()) {
+                    existing.setBrand(product.getBrand());
+                } else if (existing.getBrand() == null || existing.getBrand().trim().isEmpty()) {
+                    throw new IllegalArgumentException("Brand is required for spare parts");
+                }
+                
+                if (product.getPartType() != null && !product.getPartType().trim().isEmpty()) {
+                    existing.setPartType(product.getPartType());
+                } else if (existing.getPartType() == null || existing.getPartType().trim().isEmpty()) {
+                    throw new IllegalArgumentException("Part type is required for spare parts");
+                }
+                
+                if (product.getBikeModel() != null && !product.getBikeModel().trim().isEmpty()) {
+                    // Format bike model
+                    String bikeModel = product.getBikeModel().toUpperCase().replace(" ", "-");
+                    existing.setBikeModel(bikeModel);
+                } else if (existing.getBikeModel() == null || existing.getBikeModel().trim().isEmpty()) {
+                    throw new IllegalArgumentException("Bike model is required for spare parts");
+                }
+            }
+        } else {
+            // If product type isn't provided, check if the existing is a spare part
+            // and the new data contains updates to spare part fields
+            if ("spare part".equals(existing.getProductType())) {
+                if (product.getBrand() != null) {
+                    if (product.getBrand().trim().isEmpty()) {
+                        throw new IllegalArgumentException("Brand cannot be empty for spare parts");
+                    }
+                    existing.setBrand(product.getBrand());
+                }
+                
+                if (product.getPartType() != null) {
+                    if (product.getPartType().trim().isEmpty()) {
+                        throw new IllegalArgumentException("Part type cannot be empty for spare parts");
+                    }
+                    existing.setPartType(product.getPartType());
+                }
+                
+                if (product.getBikeModel() != null) {
+                    if (product.getBikeModel().trim().isEmpty()) {
+                        throw new IllegalArgumentException("Bike model cannot be empty for spare parts");
+                    }
+                    // Format bike model
+                    String bikeModel = product.getBikeModel().toUpperCase().replace(" ", "-");
+                    existing.setBikeModel(bikeModel);
+                }
+            }
         }
         
         return productRepository.save(existing);

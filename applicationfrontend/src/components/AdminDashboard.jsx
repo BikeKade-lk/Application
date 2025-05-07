@@ -3,7 +3,8 @@ import {
   AppBar, Toolbar, Typography, IconButton, Button, Box,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   Paper, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Snackbar, Alert, CircularProgress
+  TextField, Snackbar, Alert, CircularProgress,
+  FormControl, InputLabel, Select, MenuItem, FormHelperText
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ImageIcon from '@mui/icons-material/Image';
@@ -14,11 +15,41 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [form, setForm] = useState({ name: '', image: '', description: '', price: '' });
+  const [form, setForm] = useState({ 
+    name: '', 
+    image: '', 
+    description: '', 
+    price: '',
+    productType: 'accessory',
+    brand: '',
+    partType: '',
+    bikeModel: ''
+  });
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [alertInfo, setAlertInfo] = useState({ open: false, message: '', severity: 'info' });
 
+  // Constants for dropdown options
+  const PRODUCT_TYPES = ['accessory', 'spare part'];
+  const BRANDS = ['Yamaha', 'Honda', 'Kawasaki', 'Suzuki', 'KTM', 'Husqvarna'];
+  const PART_TYPES = [
+    'engine part',
+    'body part',
+    'electric part',
+    'suspension',
+    'brakes',
+    'drivetrain',
+    'wheels and tires',
+    'exhaust system',
+    'air intake',
+    'cooling system',
+    'fuel system',
+    'controls and handlebars',
+    'frame and chassis',
+    'lighting',
+    'protection accessories'
+  ];
+  
   // API endpoint
   const API_URL = 'http://localhost:8080/product';
 
@@ -34,11 +65,27 @@ export default function AdminDashboard() {
   function handleOpen(product = null) {
     if (product) {
       setEditingProduct(product);
-      setForm({ ...product });
+      setForm({ 
+        ...product,
+        // Set default values for new fields if they don't exist
+        productType: product.productType || 'accessory',
+        brand: product.brand || '',
+        partType: product.partType || '',
+        bikeModel: product.bikeModel || ''
+      });
       setImagePreview(product.image || null);
     } else {
       setEditingProduct(null);
-      setForm({ name: '', image: '', description: '', price: '' });
+      setForm({ 
+        name: '', 
+        image: '', 
+        description: '', 
+        price: '', 
+        productType: 'accessory',
+        brand: '',
+        partType: '',
+        bikeModel: ''
+      });
       setImagePreview(null);
     }
     setOpen(true);
@@ -52,7 +99,14 @@ export default function AdminDashboard() {
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    
+    // Special handling for bikeModel - convert to uppercase and replace spaces with dashes
+    if (name === 'bikeModel') {
+      const formattedValue = value.toUpperCase().replace(/\s+/g, '-');
+      setForm(prev => ({ ...prev, [name]: formattedValue }));
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }));
+    }
   }
 
   function handleImageChange(e) {
@@ -82,6 +136,24 @@ export default function AdminDashboard() {
     if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0) {
       showAlert('Price must be greater than zero', 'error');
       return false;
+    }
+    
+    // Validate spare part specific fields
+    if (form.productType === 'spare part') {
+      if (!form.brand) {
+        showAlert('Brand is required for spare parts', 'error');
+        return false;
+      }
+      
+      if (!form.partType) {
+        showAlert('Part type is required for spare parts', 'error');
+        return false;
+      }
+      
+      if (!form.bikeModel) {
+        showAlert('Bike model is required for spare parts', 'error');
+        return false;
+      }
     }
     
     return true;
@@ -179,13 +251,15 @@ export default function AdminDashboard() {
                 <TableCell>Image</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Price</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Details</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {products.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center">
+                  <TableCell colSpan={7} align="center">
                     {loading ? 'Loading...' : 'No products found'}
                   </TableCell>
                 </TableRow>
@@ -219,6 +293,16 @@ export default function AdminDashboard() {
                         'No description'}
                     </TableCell>
                     <TableCell>Rs.{Number(product.price).toFixed(2)}</TableCell>
+                    <TableCell>{product.productType || 'accessory'}</TableCell>
+                    <TableCell>
+                      {product.productType === 'spare part' ? (
+                        <>
+                          {product.brand && <div><strong>Brand:</strong> {product.brand}</div>}
+                          {product.partType && <div><strong>Part Type:</strong> {product.partType}</div>}
+                          {product.bikeModel && <div><strong>Model:</strong> {product.bikeModel}</div>}
+                        </>
+                      ) : 'N/A'}
+                    </TableCell>
                     <TableCell>
                       <Button size="small" onClick={() => handleOpen(product)}>Edit</Button>
                       <Button size="small" color="error" onClick={() => handleDelete(product.id)}>Delete</Button>
@@ -235,6 +319,82 @@ export default function AdminDashboard() {
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>{editingProduct ? 'Edit Product' : 'Add Product'}</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+          {/* Product Type Selection */}
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="product-type-label">Product Type</InputLabel>
+            <Select
+              labelId="product-type-label"
+              id="product-type"
+              name="productType"
+              value={form.productType || 'accessory'}
+              label="Product Type"
+              onChange={handleChange}
+            >
+              {PRODUCT_TYPES.map((type) => (
+                <MenuItem key={type} value={type}>
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          
+          {/* Spare Part Specific Fields */}
+          {form.productType === 'spare part' && (
+            <>
+              <FormControl fullWidth margin="normal" required error={form.brand === ''}>
+                <InputLabel id="brand-label">Brand</InputLabel>
+                <Select
+                  labelId="brand-label"
+                  id="brand"
+                  name="brand"
+                  value={form.brand || ''}
+                  label="Brand"
+                  onChange={handleChange}
+                >
+                  {BRANDS.map((brand) => (
+                    <MenuItem key={brand} value={brand}>{brand}</MenuItem>
+                  ))}
+                </Select>
+                {form.brand === '' && <FormHelperText>Brand is required for spare parts</FormHelperText>}
+              </FormControl>
+              
+              <FormControl fullWidth margin="normal" required error={form.partType === ''}>
+                <InputLabel id="part-type-label">Part Type</InputLabel>
+                <Select
+                  labelId="part-type-label"
+                  id="part-type"
+                  name="partType"
+                  value={form.partType || ''}
+                  label="Part Type"
+                  onChange={handleChange}
+                >
+                  {PART_TYPES.map((partType) => (
+                    <MenuItem key={partType} value={partType}>
+                      {partType.charAt(0).toUpperCase() + partType.slice(1)}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {form.partType === '' && <FormHelperText>Part type is required for spare parts</FormHelperText>}
+              </FormControl>
+              
+              <TextField 
+                label="Bike Model" 
+                name="bikeModel" 
+                value={form.bikeModel || ''} 
+                onChange={handleChange}
+                fullWidth 
+                required
+                error={form.bikeModel === ''}
+                helperText={form.bikeModel === '' ? "Bike model is required for spare parts" : "Use capital letters and hyphens only (no spaces)"}
+                margin="normal"
+                inputProps={{
+                  style: { textTransform: 'uppercase' }
+                }}
+              />
+            </>
+          )}
+
+          {/* Standard Product Fields */}
           <TextField 
             label="Name" 
             name="name" 
