@@ -218,7 +218,7 @@ export default function AdminDashboard() {
                           product.description) : 
                         'No description'}
                     </TableCell>
-                    <TableCell>${Number(product.price).toFixed(2)}</TableCell>
+                    <TableCell>Rs.{Number(product.price).toFixed(2)}</TableCell>
                     <TableCell>
                       <Button size="small" onClick={() => handleOpen(product)}>Edit</Button>
                       <Button size="small" color="error" onClick={() => handleDelete(product.id)}>Delete</Button>
