@@ -1,10 +1,10 @@
 import './App.css';
-import UserDashboard from './components/UserDashboard';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   return (
     <div className="App">
-      <UserDashboard />
+      <AdminDashboard />
     </div>
   );
 }
