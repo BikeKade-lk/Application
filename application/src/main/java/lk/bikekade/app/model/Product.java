@@ -1,23 +1,29 @@
 package lk.bikekade.app.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "products")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(nullable = false)
     private String name;
 
-    @Lob // Handles large image strings (Base64)
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String image;
 
+    @Column(length = 1000)
     private String description;
 
     private int price;
