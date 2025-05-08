@@ -12,6 +12,9 @@ import lk.bikekade.app.model.User;
 import lk.bikekade.app.repository.ProductRepository;
 import lk.bikekade.app.repository.UserRepository;
 
+import org.springframework.scheduling.annotation.Scheduled;
+import java.time.LocalDateTime;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -208,5 +211,15 @@ public class ProductServiceImpl implements ProductService {
             return user != null && user.getId() == userId;
         }
         return false;
+    }
+    
+ // Scheduled to run daily at midnight
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void deleteOldProducts() {
+        LocalDateTime cutoffDate = LocalDateTime.now().minusDays(30);
+        List<Product> oldProducts = productRepository.findByCreatedAtBefore(cutoffDate);
+
+        productRepository.deleteAll(oldProducts);
+        System.out.println("Deleted products older than 30 days.");
     }
 }

@@ -1,6 +1,8 @@
 package lk.bikekade.app.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "products")
@@ -33,6 +35,9 @@ public class Product {
     
     @Column(length = 50)
     private String bikeModel;
+    
+    @CreationTimestamp
+    private LocalDateTime createdAt;
     
     // Add user relationship
     @ManyToOne(fetch = FetchType.EAGER)
@@ -95,4 +100,12 @@ public class Product {
     
     public String getBikeModel() { return bikeModel; }
     public void setBikeModel(String bikeModel) { this.bikeModel = bikeModel; }
+    
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }
