@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function Signin() {
+export default function Signup() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -230,7 +230,7 @@ export default function Signin() {
           Submit
         </button>
 
-        <p onClick={() => navigate("/login")} className="login-link">
+        <p onClick={() => navigate("/signin")} className="login-link">
           Do you have an account? Login
         </p>
 

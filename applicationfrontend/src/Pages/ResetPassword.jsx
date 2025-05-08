@@ -60,7 +60,7 @@ export default function ResetPassword() {
       if (response.data.success) {
         setSuccessMessage("Password reset successful. You can now log in.");
         setFormData({ identifier: "", newPassword: "", confirmPassword: "" });
-        setTimeout(() => navigate("/login"), 2000); // redirect after delay
+        setTimeout(() => navigate("/signin"), 2000); // redirect after delay
       } else {
         setErrors([response.data.message || "Failed to reset password."]);
       }

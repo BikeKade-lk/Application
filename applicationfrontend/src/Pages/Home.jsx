@@ -18,7 +18,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 
-export default function HomePage() {
+export default function Home() {
   const navigate = useNavigate();
 
   return (
@@ -112,7 +112,7 @@ export default function HomePage() {
               variant="contained"
               size="large"
               startIcon={<UserIcon />}
-              onClick={() => navigate("/user")}
+              onClick={() => navigate("/products")}
               sx={{
                 py: 1.5,
                 px: 3,
@@ -127,7 +127,7 @@ export default function HomePage() {
               variant="outlined"
               size="large"
               startIcon={<AdminIcon />}
-              onClick={() => navigate("/signin")}
+              onClick={() => navigate("/signup")}
               sx={{
                 py: 1.5,
                 px: 3,

@@ -32,7 +32,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import LogoutIcon from "@mui/icons-material/Logout";
 import axios from "axios";
 
-export default function AdminDashboard() {
+export default function Dashboard() {
   const navigate = useNavigate();
   // Define state for user
   const [user, setUser] = useState(null);
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
     const userInfo = localStorage.getItem("user");
     if (!userInfo) {
       // Redirect to login if no user info exists
-      navigate("/login");
+      navigate("/signin");
       return;
     }
     
@@ -278,7 +278,7 @@ export default function AdminDashboard() {
 
   function handleLogout() {
     localStorage.removeItem("user");
-    navigate("/login");
+    navigate("/signin");
   }
 
   // Display loading while checking auth

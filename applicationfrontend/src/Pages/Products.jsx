@@ -47,7 +47,7 @@ import {
 } from "@mui/icons-material";
 import axios from "axios";
 
-export default function UserDashboard() {
+export default function Products() {
   // State for products and filtering
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);

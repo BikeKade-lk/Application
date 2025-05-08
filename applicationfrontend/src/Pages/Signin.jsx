@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function Login() {
+export default function Signin() {
   const navigate = useNavigate();
 
   const [credentials, setCredentials] = useState({
@@ -25,7 +25,7 @@ export default function Login() {
           username: response.data.username,
           fullName: response.data.fullName
         }));
-        navigate("/admin");
+        navigate("/dashboard");
       } else {
         setError("Invalid username or password");
       }
@@ -36,7 +36,7 @@ export default function Login() {
   };
 
   const handleResetPassword = () => {
-    navigate("/reset-password"); // You should have a route for this
+    navigate("/reset_password"); // You should have a route for this
   };
 
   return (
