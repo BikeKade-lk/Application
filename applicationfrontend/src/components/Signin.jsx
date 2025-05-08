@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Signin() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     fname: "",
     lname: "",
@@ -9,7 +12,7 @@ export default function Signin() {
     pno: "",
     address: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +45,7 @@ export default function Signin() {
         pno: "",
         address: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
       });
     } catch (error) {
       console.error("Error adding user:", error);
@@ -152,6 +155,7 @@ export default function Signin() {
           </tbody>
         </table>
         <button type="submit">Submit</button>
+        <p onClick={() => navigate("/login")}>Do you have an account? Login</p>
       </form>
     </div>
   );
