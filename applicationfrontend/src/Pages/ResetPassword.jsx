@@ -17,11 +17,14 @@ export default function ResetPassword() {
 
   const validatePassword = (password) => {
     const issues = [];
-    if (password.length < 8) issues.push("Password must be at least 8 characters");
-    if (!/[A-Z]/.test(password)) issues.push("Must include an uppercase letter");
+    if (password.length < 8)
+      issues.push("Password must be at least 8 characters");
+    if (!/[A-Z]/.test(password))
+      issues.push("Must include an uppercase letter");
     if (!/[a-z]/.test(password)) issues.push("Must include a lowercase letter");
     if (!/[0-9]/.test(password)) issues.push("Must include a number");
-    if (!/[!@#$%^&*]/.test(password)) issues.push("Must include a special character");
+    if (!/[!@#$%^&*]/.test(password))
+      issues.push("Must include a special character");
     return issues;
   };
 
@@ -52,10 +55,13 @@ export default function ResetPassword() {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/user/reset-password", {
-        identifier,
-        newPassword,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/user/reset-password",
+        {
+          identifier,
+          newPassword,
+        }
+      );
 
       if (response.data.success) {
         setSuccessMessage("Password reset successful. You can now log in.");

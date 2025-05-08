@@ -32,7 +32,8 @@ export default function Signup() {
     if (name === "password" || name === "confirmPassword") {
       setPasswordsMatch(
         formData.confirmPassword === "" ||
-        value === (name === "password" ? formData.confirmPassword : formData.password)
+          value ===
+            (name === "password" ? formData.confirmPassword : formData.password)
       );
     }
   };
@@ -175,7 +176,9 @@ export default function Signup() {
             value={formData.address}
             onChange={handleChange}
           />
-          {formErrors.address && <p className="error-text">{formErrors.address}</p>}
+          {formErrors.address && (
+            <p className="error-text">{formErrors.address}</p>
+          )}
         </label>
 
         <label>
@@ -188,13 +191,17 @@ export default function Signup() {
             required
             className={!isPasswordValid ? "invalid-input" : ""}
           />
-          {formErrors.password && <p className="error-text">{formErrors.password}</p>}
+          {formErrors.password && (
+            <p className="error-text">{formErrors.password}</p>
+          )}
         </label>
 
         {formData.password && passwordErrors.length > 0 && (
           <ul className="password-errors">
             {passwordErrors.map((error, idx) => (
-              <li key={idx} className="error-text">{error}</li>
+              <li key={idx} className="error-text">
+                {error}
+              </li>
             ))}
           </ul>
         )}
@@ -223,10 +230,7 @@ export default function Signup() {
           Show Passwords
         </label>
 
-        <button
-          type="submit"
-          disabled={!isPasswordValid || !passwordsMatch}
-        >
+        <button type="submit" disabled={!isPasswordValid || !passwordsMatch}>
           Submit
         </button>
 
@@ -237,11 +241,25 @@ export default function Signup() {
         <div className="password-requirements">
           <h3>Password Requirements:</h3>
           <ul>
-            <li className={formData.password.length >= 8 ? "met" : ""}>At least 8 characters long</li>
-            <li className={/[A-Z]/.test(formData.password) ? "met" : ""}>At least one uppercase letter</li>
-            <li className={/[a-z]/.test(formData.password) ? "met" : ""}>At least one lowercase letter</li>
-            <li className={/[0-9]/.test(formData.password) ? "met" : ""}>At least one number</li>
-            <li className={/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password) ? "met" : ""}>
+            <li className={formData.password.length >= 8 ? "met" : ""}>
+              At least 8 characters long
+            </li>
+            <li className={/[A-Z]/.test(formData.password) ? "met" : ""}>
+              At least one uppercase letter
+            </li>
+            <li className={/[a-z]/.test(formData.password) ? "met" : ""}>
+              At least one lowercase letter
+            </li>
+            <li className={/[0-9]/.test(formData.password) ? "met" : ""}>
+              At least one number
+            </li>
+            <li
+              className={
+                /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password)
+                  ? "met"
+                  : ""
+              }
+            >
               At least one special character
             </li>
           </ul>

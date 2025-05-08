@@ -89,10 +89,10 @@ export default function Dashboard() {
       navigate("/signin");
       return;
     }
-    
+
     const parsedUser = JSON.parse(userInfo);
     setUser(parsedUser);
-    
+
     // This will trigger the products fetch effect
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
@@ -221,7 +221,10 @@ export default function Dashboard() {
     try {
       if (editingProduct) {
         // Add userId parameter to ensure ownership check
-        await axios.put(`${API_URL}/update/${editingProduct.id}?userId=${user.id}`, form);
+        await axios.put(
+          `${API_URL}/update/${editingProduct.id}?userId=${user.id}`,
+          form
+        );
         showAlert("Product updated successfully", "success");
       } else {
         // Use the user/{username}/add endpoint to associate the product with the user
@@ -262,7 +265,7 @@ export default function Dashboard() {
 
   async function fetchUserProducts() {
     if (!user) return;
-    
+
     setLoading(true);
     try {
       // Use the user/name/{username} endpoint to get products for this user
@@ -284,7 +287,14 @@ export default function Dashboard() {
   // Display loading while checking auth
   if (!user) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -303,9 +313,13 @@ export default function Dashboard() {
             <Button color="inherit" onClick={() => handleOpen()}>
               Add Product
             </Button>
-            <Button color="inherit" onClick={handleLogout} startIcon={<LogoutIcon />}>
+            <Button
+              color="inherit"
+              onClick={handleLogout}
+              startIcon={<LogoutIcon />}
+            >
               Logout
-            </Button>            
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>
@@ -339,7 +353,9 @@ export default function Dashboard() {
               {products.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} align="center">
-                    {loading ? "Loading..." : "No products found. Add your first product!"}
+                    {loading
+                      ? "Loading..."
+                      : "No products found. Add your first product!"}
                   </TableCell>
                 </TableRow>
               ) : (

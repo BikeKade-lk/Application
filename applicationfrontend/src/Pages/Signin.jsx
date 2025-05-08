@@ -7,7 +7,7 @@ export default function Signin() {
 
   const [credentials, setCredentials] = useState({
     uname: "",
-    password: ""
+    password: "",
   });
   const [error, setError] = useState("");
 
@@ -17,14 +17,20 @@ export default function Signin() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/user/login", credentials);
+      const response = await axios.post(
+        "http://localhost:8080/user/login",
+        credentials
+      );
 
       if (response.data.success) {
-        localStorage.setItem("user", JSON.stringify({
-          id: response.data.userId,
-          username: response.data.username,
-          fullName: response.data.fullName
-        }));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            id: response.data.userId,
+            username: response.data.username,
+            fullName: response.data.fullName,
+          })
+        );
         navigate("/dashboard");
       } else {
         setError("Invalid username or password");
@@ -78,7 +84,12 @@ export default function Signin() {
       </table>
       <p
         onClick={handleResetPassword}
-        style={{ color: "blue", cursor: "pointer", textDecoration: "underline", marginTop: "10px" }}
+        style={{
+          color: "blue",
+          cursor: "pointer",
+          textDecoration: "underline",
+          marginTop: "10px",
+        }}
       >
         Forgot your password? Reset here
       </p>
