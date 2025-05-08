@@ -27,6 +27,10 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Username cannot be empty");
         }
 
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+
         return userRepository.save(user);
     }
 
@@ -64,6 +68,10 @@ public class UserServiceImpl implements UserService {
 
         if (user.getAddress() != null) {
             existing.setAddress(user.getAddress());
+        }
+
+        if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
+            existing.setPassword(user.getPassword());
         }
 
         return userRepository.save(existing);
