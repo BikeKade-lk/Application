@@ -85,4 +85,11 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.deleteById(id);
     }
+    
+    @Override
+    public Optional<User> loginUser(String uname, String password) {
+        return userRepository.findAll().stream()
+            .filter(user -> user.getUname().equals(uname) && user.getPassword().equals(password))
+            .findFirst();
+    }
 }

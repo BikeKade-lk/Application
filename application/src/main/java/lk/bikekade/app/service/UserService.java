@@ -11,4 +11,5 @@ public interface UserService {
     Optional<User> getUserById(int id);
     User updateUser(int id, User user);
     void deleteUser(int id);
+    Optional<User> loginUser(String uname, String password);
 }

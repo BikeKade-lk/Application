@@ -1,6 +1,7 @@
 package lk.bikekade.app.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +47,11 @@ public class UserController {
     public String deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
         return "User with ID " + id + " has been deleted";
-    }	
+    }
+
+    // LOGIN
+    @PostMapping("/login")
+    public boolean login(@RequestBody User loginRequest) {
+        return userService.loginUser(loginRequest.getUname(), loginRequest.getPassword()).isPresent();
+    }
 }
