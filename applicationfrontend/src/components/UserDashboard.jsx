@@ -28,12 +28,22 @@ import {
   MenuItem,
   Pagination,
   Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Avatar,
 } from "@mui/material";
 import {
   Search as SearchIcon,
   FilterList as FilterIcon,
   DirectionsBike as BikeIcon,
   Menu as MenuIcon,
+  Person as PersonIcon,
+  Phone as PhoneIcon,
+  Home as HomeIcon,
+  CalendarToday as CalendarIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 import axios from "axios";
 
@@ -57,6 +67,10 @@ export default function UserDashboard() {
   });
   const [page, setPage] = useState(1);
   const [productsPerPage] = useState(12);
+
+  // New state for product details dialog
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   // Constants
   const API_URL = "http://localhost:8080/product";
@@ -127,6 +141,16 @@ export default function UserDashboard() {
     window.scrollTo(0, 0); // Scroll to top when page changes
   }
 
+  // New functions for product details dialog
+  function openProductDetails(product) {
+    setSelectedProduct(product);
+    setDetailsDialogOpen(true);
+  }
+
+  function closeProductDetails() {
+    setDetailsDialogOpen(false);
+  }
+
   async function fetchProducts() {
     setLoading(true);
     try {
@@ -191,6 +215,17 @@ export default function UserDashboard() {
       }
 
       return true;
+    });
+  }
+
+  // Helper function to format date
+  function formatDate(dateString) {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   }
 
@@ -515,10 +550,15 @@ export default function UserDashboard() {
                           </Typography>
                         )}
                       </Box>
-                    )}                    
+                    )}
                   </CardContent>
                   <CardActions>
-                    <Button size="small" variant="contained" fullWidth>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      fullWidth
+                      onClick={() => openProductDetails(product)}
+                    >
                       View Details
                     </Button>
                   </CardActions>
@@ -542,6 +582,215 @@ export default function UserDashboard() {
           </Box>
         )}
       </Box>
+
+      {/* Product Details Dialog */}
+      <Dialog
+        open={detailsDialogOpen}
+        onClose={closeProductDetails}
+        maxWidth="md"
+        fullWidth
+      >
+        {selectedProduct && (
+          <>
+            <DialogTitle>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6">{selectedProduct.name}</Typography>
+                <IconButton onClick={closeProductDetails}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+            </DialogTitle>
+            <DialogContent dividers>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <img
+                    src={
+                      selectedProduct.image ||
+                      "https://via.placeholder.com/600x400?text=No+Image"
+                    }
+                    alt={selectedProduct.name}
+                    style={{ width: "100%", borderRadius: "8px" }}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://via.placeholder.com/600x400?text=No+Image";
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h5" color="primary" gutterBottom>
+                    Rs.{Number(selectedProduct.price).toFixed(2)}
+                  </Typography>
+
+                  {/* Product description */}
+                  <Typography variant="body1" paragraph>
+                    {selectedProduct.description || "No description available"}
+                  </Typography>
+
+                  {/* Product specifications */}
+                  {selectedProduct.productType === "spare part" && (
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="h6" gutterBottom>
+                        Specifications
+                      </Typography>
+                      <Grid container spacing={1}>
+                        <Grid item xs={4}>
+                          <Typography variant="body2" color="text.secondary">
+                            Product Type:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <Typography variant="body2">
+                            {selectedProduct.productType}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                          <Typography variant="body2" color="text.secondary">
+                            Brand:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <Typography variant="body2">
+                            {selectedProduct.brand || "N/A"}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                          <Typography variant="body2" color="text.secondary">
+                            Part Type:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <Typography variant="body2">
+                            {selectedProduct.partType || "N/A"}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                          <Typography variant="body2" color="text.secondary">
+                            Bike Model:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <Typography variant="body2">
+                            {selectedProduct.bikeModel || "N/A"}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  )}
+
+                  {selectedProduct.productType === "accessory" && (
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="h6" gutterBottom>
+                        Specifications
+                      </Typography>
+                      <Grid container spacing={1}>
+                        <Grid item xs={4}>
+                          <Typography variant="body2" color="text.secondary">
+                            Product Type:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <Typography variant="body2">
+                            {selectedProduct.productType}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                          <Typography variant="body2" color="text.secondary">
+                            Brand:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <Typography variant="body2">
+                            {selectedProduct.brand || "N/A"}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                          <Typography variant="body2" color="text.secondary">
+                            Part Type:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <Typography variant="body2">
+                            {selectedProduct.partType || "N/A"}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item xs={4}>
+                          <Typography variant="body2" color="text.secondary">
+                            Bike Model:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                          <Typography variant="body2">
+                            {selectedProduct.bikeModel || "N/A"}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  )}
+
+                  {/* Seller information */}
+                  <Box
+                    sx={{ mt: 3, p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}
+                  >
+                    <Typography variant="h6" gutterBottom>
+                      Seller Information
+                    </Typography>
+
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                      <PersonIcon sx={{ mr: 1, color: "text.secondary" }} />
+                      <Typography variant="body1">
+                        {selectedProduct.user
+                          ? `${selectedProduct.user.fname} ${
+                              selectedProduct.user.lname || ""
+                            }`
+                          : "Unknown Seller"}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                      <HomeIcon sx={{ mr: 1, color: "text.secondary" }} />
+                      <Typography variant="body1">
+                        {selectedProduct.user?.address ||
+                          "No contact information"}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                      <PhoneIcon sx={{ mr: 1, color: "text.secondary" }} />
+                      <Typography variant="body1">
+                        {selectedProduct.user?.pno || "No contact information"}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <CalendarIcon sx={{ mr: 1, color: "text.secondary" }} />
+                      <Typography variant="body1">
+                        Listed on: {formatDate(selectedProduct.createdAt)}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeProductDetails}>Close</Button>
+              {/* You could add more action buttons here, like "Contact Seller" or "Buy Now" */}
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
 
       {/* Alert Snackbar */}
       <Snackbar
