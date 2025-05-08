@@ -11,12 +11,12 @@ import {
   IconButton
 } from '@mui/material';
 import { 
-  DirectionsBike as BikeIcon,
   AdminPanelSettings as AdminIcon,
   Person as UserIcon,
   Menu as MenuIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import logo from '../assets/images/logo.png';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -25,19 +25,17 @@ export default function HomePage() {
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {/* App Bar */}
       <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-            <BikeIcon sx={{ mr: 1 }} /> BikeKade.lk
-          </Typography>
+        <Toolbar>          
+          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+            <img 
+              src={logo} 
+              alt="BikeKade.lk Logo" 
+              style={{ height: '40px', marginRight: '10px' }} 
+            />
+            <Typography variant="h6" component="div">
+              BikeKade.lk
+            </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -60,24 +58,30 @@ export default function HomePage() {
             p: 4, 
             mb: 4, 
             textAlign: 'center',
-            backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("https://via.placeholder.com/1200x400?text=Motorcycle+Background")', 
+            backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("/bike-background.jpg")', 
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             width: '100%',
             maxWidth: 800
           }}
         >
-          <Typography 
-            variant="h3" 
-            component="h1" 
-            sx={{ 
-              fontWeight: 'bold',
-              mb: 2,
-              color: 'primary.main'
-            }}
-          >
-            Welcome to BikeKade.lk
-          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
+            <img 
+              src={logo}
+              alt="BikeKade.lk Logo" 
+              style={{ height: '120px', marginBottom: '16px' }} 
+            />
+            <Typography 
+              variant="h3" 
+              component="h1" 
+              sx={{ 
+                fontWeight: 'bold',
+                color: 'primary.main'
+              }}
+            >
+              Welcome to BikeKade.lk
+            </Typography>
+          </Box>
           <Typography variant="h6" sx={{ mb: 3 }}>
             Your one-stop shop for motorcycle accessories and spare parts
           </Typography>
