@@ -18,4 +18,6 @@ public interface ProductService {
     Product updateProduct(int id, Product product);
     void deleteProduct(int id);
     boolean userOwnsProduct(int userId, int productId);
+    Optional<User> getUserByUsername(String username);
+    User saveUser(User user);
 }

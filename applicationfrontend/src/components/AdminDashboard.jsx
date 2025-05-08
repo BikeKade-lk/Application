@@ -299,16 +299,13 @@ export default function AdminDashboard() {
             {user.fullName}'s Dashboard
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Avatar sx={{ bgcolor: "secondary.main" }}>
-              {user.fullName.charAt(0)}
-            </Avatar>
             <Typography variant="subtitle1">{user.username}</Typography>
-            <Button color="inherit" onClick={handleLogout} startIcon={<LogoutIcon />}>
-              Logout
-            </Button>
             <Button color="inherit" onClick={() => handleOpen()}>
               Add Product
             </Button>
+            <Button color="inherit" onClick={handleLogout} startIcon={<LogoutIcon />}>
+              Logout
+            </Button>            
           </Box>
         </Toolbar>
       </AppBar>

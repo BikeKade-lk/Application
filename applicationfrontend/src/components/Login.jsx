@@ -17,19 +17,14 @@ export default function Login() {
 
   const handleSubmit = async () => {
     try {
-      // Make a request to the backend for login validation
       const response = await axios.post("http://localhost:8080/user/login", credentials);
-      
-      // The backend returns a JSON object with user details and success property
+
       if (response.data.success) {
-        // Store user info in localStorage for persistence
         localStorage.setItem("user", JSON.stringify({
           id: response.data.userId,
           username: response.data.username,
           fullName: response.data.fullName
         }));
-        
-        // Navigate to admin dashboard
         navigate("/admin");
       } else {
         setError("Invalid username or password");
@@ -38,6 +33,10 @@ export default function Login() {
       setError("Login failed. Please try again.");
       console.error("Login error:", error);
     }
+  };
+
+  const handleResetPassword = () => {
+    navigate("/reset-password"); // You should have a route for this
   };
 
   return (
@@ -77,6 +76,12 @@ export default function Login() {
           </tr>
         </tbody>
       </table>
+      <p
+        onClick={handleResetPassword}
+        style={{ color: "blue", cursor: "pointer", textDecoration: "underline", marginTop: "10px" }}
+      >
+        Forgot your password? Reset here
+      </p>
     </div>
   );
 }

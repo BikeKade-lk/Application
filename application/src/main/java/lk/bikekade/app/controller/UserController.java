@@ -86,4 +86,30 @@ public class UserController {
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
+ // RESET PASSWORD
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> payload) {
+        String identifier = payload.get("identifier");
+        String newPassword = payload.get("newPassword");
+
+        if (identifier == null || newPassword == null) {
+            return new ResponseEntity<>("Missing identifier or newPassword", HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<User> userOptional = userService.getUserByUsername(identifier);
+        if (!userOptional.isPresent()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+
+        User user = userOptional.get();
+        user.setPassword(newPassword); // You can add password hashing here if needed
+        userService.saveUser(user); // Use save to persist the updated password
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Password updated successfully.");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    
 }
