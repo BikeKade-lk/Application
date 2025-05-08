@@ -1,12 +1,24 @@
 import React, { useState } from "react";
+import {
+  Container,
+  TextField,
+  Typography,
+  Button,
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Alert,
+} from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    identifier: "", // username or email
+    identifier: "",
     newPassword: "",
     confirmPassword: "",
   });
@@ -66,7 +78,7 @@ export default function ResetPassword() {
       if (response.data.success) {
         setSuccessMessage("Password reset successful. You can now log in.");
         setFormData({ identifier: "", newPassword: "", confirmPassword: "" });
-        setTimeout(() => navigate("/signin"), 2000); // redirect after delay
+        setTimeout(() => navigate("/signin"), 2000);
       } else {
         setErrors([response.data.message || "Failed to reset password."]);
       }
@@ -77,59 +89,86 @@ export default function ResetPassword() {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "0 auto" }}>
-      <h2>Reset Password</h2>
-      {errors.length > 0 && (
-        <ul style={{ color: "red" }}>
-          {errors.map((err, idx) => (
-            <li key={idx}>{err}</li>
-          ))}
-        </ul>
-      )}
-      {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username or Email:</label>
-          <input
-            type="text"
-            name="identifier"
-            value={formData.identifier}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>New Password:</label>
-          <input
-            type={showPassword ? "text" : "password"}
-            name="newPassword"
-            value={formData.newPassword}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Confirm Password:</label>
-          <input
-            type={showPassword ? "text" : "password"}
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={showPassword}
-              onChange={() => setShowPassword(!showPassword)}
-            />{" "}
-            Show Passwords
-          </label>
-        </div>
-        <button type="submit">Reset Password</button>
-      </form>
-    </div>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Header />
+      <Container maxWidth="sm" sx={{ py: 6 }}>
+        <Box mt={4} p={3} sx={{ boxShadow: 2, borderRadius: 2 }}>
+          <Typography variant="h5" gutterBottom>
+            Reset Password
+          </Typography>
+
+          {errors.length > 0 && (
+            <Box mb={2}>
+              {errors.map((err, idx) => (
+                <Alert severity="error" key={idx} sx={{ mb: 1 }}>
+                  {err}
+                </Alert>
+              ))}
+            </Box>
+          )}
+
+          {successMessage && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              {successMessage}
+            </Alert>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label="Username or Email"
+              name="identifier"
+              value={formData.identifier}
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+
+            <TextField
+              fullWidth
+              type={showPassword ? "text" : "password"}
+              label="New Password"
+              name="newPassword"
+              value={formData.newPassword}
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+
+            <TextField
+              fullWidth
+              type={showPassword ? "text" : "password"}
+              label="Confirm Password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={showPassword}
+                  onChange={() => setShowPassword(!showPassword)}
+                />
+              }
+              label="Show Passwords"
+            />
+
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+            >
+              Reset Password
+            </Button>
+          </form>
+        </Box>
+      </Container>
+      <Footer />
+    </Box>
   );
 }

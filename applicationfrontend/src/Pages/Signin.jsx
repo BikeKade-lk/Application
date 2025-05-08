@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Paper,
+} from "@mui/material";
 
 export default function Signin() {
   const navigate = useNavigate();
@@ -42,57 +52,79 @@ export default function Signin() {
   };
 
   const handleResetPassword = () => {
-    navigate("/reset_password"); // You should have a route for this
+    navigate("/reset_password");
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <table>
-        <tbody>
-          <tr>
-            <td>User Name:</td>
-            <td>
-              <input
-                type="text"
-                name="uname"
-                value={credentials.uname}
-                onChange={handleChange}
-                required
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Password:</td>
-            <td>
-              <input
-                type="password"
-                name="password"
-                value={credentials.password}
-                onChange={handleChange}
-                required
-              />
-            </td>
-          </tr>
-          <tr>
-            <td colSpan={2}>
-              <button onClick={handleSubmit}>Submit</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p
-        onClick={handleResetPassword}
-        style={{
-          color: "blue",
-          cursor: "pointer",
-          textDecoration: "underline",
-          marginTop: "10px",
-        }}
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Header />
+      <Container
+        maxWidth="sm"
+        sx={{ flexGrow: 1, display: "flex", alignItems: "center", py: 5 }}
       >
-        Forgot your password? Reset here
-      </p>
-    </div>
+        <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
+          <Typography variant="h4" align="center" gutterBottom>
+            Login
+          </Typography>
+
+          {error && (
+            <Typography
+              variant="body2"
+              color="error"
+              align="center"
+              sx={{ mb: 2 }}
+            >
+              {error}
+            </Typography>
+          )}
+
+          <Box component="form" noValidate autoComplete="off">
+            <TextField
+              fullWidth
+              label="Username"
+              name="uname"
+              value={credentials.uname}
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+            <TextField
+              fullWidth
+              label="Password"
+              type="password"
+              name="password"
+              value={credentials.password}
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+            <Box sx={{ mt: 3 }}>
+              <Button
+                variant="contained"
+                fullWidth
+                size="large"
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </Box>
+            <Typography
+              variant="body2"
+              onClick={handleResetPassword}
+              sx={{
+                mt: 2,
+                color: "primary.main",
+                textAlign: "center",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+            >
+              Forgot your password? Reset here
+            </Typography>
+          </Box>
+        </Paper>
+      </Container>
+      <Footer />
+    </Box>
   );
 }

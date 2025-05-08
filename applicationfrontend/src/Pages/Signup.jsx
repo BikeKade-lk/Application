@@ -1,6 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Box,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -40,22 +55,12 @@ export default function Signup() {
 
   const validatePassword = (password) => {
     const errors = [];
-
-    if (password.length < 8) {
-      errors.push("Password must be at least 8 characters long");
-    }
-    if (!/[A-Z]/.test(password)) {
-      errors.push("Password must contain at least one uppercase letter");
-    }
-    if (!/[a-z]/.test(password)) {
-      errors.push("Password must contain at least one lowercase letter");
-    }
-    if (!/[0-9]/.test(password)) {
-      errors.push("Password must contain at least one number");
-    }
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-      errors.push("Password must contain at least one special character");
-    }
+    if (password.length < 8) errors.push("At least 8 characters long");
+    if (!/[A-Z]/.test(password)) errors.push("At least one uppercase letter");
+    if (!/[a-z]/.test(password)) errors.push("At least one lowercase letter");
+    if (!/[0-9]/.test(password)) errors.push("At least one number");
+    if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]/.test(password))
+      errors.push("At least one special character");
 
     setPasswordErrors(errors);
     setIsPasswordValid(errors.length === 0);
@@ -87,7 +92,6 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     if (!isPasswordValid) {
@@ -120,151 +124,152 @@ export default function Signup() {
   };
 
   return (
-    <div className="signin-container">
-      <h1>Signin</h1>
-      <form onSubmit={handleSubmit} noValidate>
-        <label>
-          First Name:
-          <input
-            type="text"
-            name="fname"
-            value={formData.fname}
-            onChange={handleChange}
-            required
-          />
-          {formErrors.fname && <p className="error-text">{formErrors.fname}</p>}
-        </label>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Header />
+      <Container maxWidth="sm" sx={{ py: 6 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
+          <Typography variant="h4" align="center" gutterBottom>
+            Sign Up
+          </Typography>
 
-        <label>
-          Last Name:
-          <input
-            type="text"
-            name="lname"
-            value={formData.lname}
-            onChange={handleChange}
-          />
-        </label>
+          <form onSubmit={handleSubmit} noValidate>
+            <TextField
+              fullWidth
+              label="First Name"
+              name="fname"
+              value={formData.fname}
+              onChange={handleChange}
+              margin="normal"
+              error={!!formErrors.fname}
+              helperText={formErrors.fname}
+              required
+            />
 
-        <label>
-          Username:
-          <input
-            type="text"
-            name="uname"
-            value={formData.uname}
-            onChange={handleChange}
-            required
-          />
-          {formErrors.uname && <p className="error-text">{formErrors.uname}</p>}
-        </label>
+            <TextField
+              fullWidth
+              label="Last Name"
+              name="lname"
+              value={formData.lname}
+              onChange={handleChange}
+              margin="normal"
+            />
 
-        <label>
-          Phone Number:
-          <input
-            type="text"
-            name="pno"
-            value={formData.pno}
-            onChange={handleChange}
-          />
-          {formErrors.pno && <p className="error-text">{formErrors.pno}</p>}
-        </label>
+            <TextField
+              fullWidth
+              label="Username"
+              name="uname"
+              value={formData.uname}
+              onChange={handleChange}
+              margin="normal"
+              error={!!formErrors.uname}
+              helperText={formErrors.uname}
+              required
+            />
 
-        <label>
-          Address:
-          <input
-            type="text"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-          />
-          {formErrors.address && (
-            <p className="error-text">{formErrors.address}</p>
-          )}
-        </label>
+            <TextField
+              fullWidth
+              label="Phone Number"
+              name="pno"
+              value={formData.pno}
+              onChange={handleChange}
+              margin="normal"
+              error={!!formErrors.pno}
+              helperText={formErrors.pno}
+              required
+            />
 
-        <label>
-          Password:
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            className={!isPasswordValid ? "invalid-input" : ""}
-          />
-          {formErrors.password && (
-            <p className="error-text">{formErrors.password}</p>
-          )}
-        </label>
+            <TextField
+              fullWidth
+              label="Address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              margin="normal"
+              error={!!formErrors.address}
+              helperText={formErrors.address}
+              required
+            />
 
-        {formData.password && passwordErrors.length > 0 && (
-          <ul className="password-errors">
-            {passwordErrors.map((error, idx) => (
-              <li key={idx} className="error-text">
-                {error}
-              </li>
-            ))}
-          </ul>
-        )}
+            <TextField
+              fullWidth
+              label="Password"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              value={formData.password}
+              onChange={handleChange}
+              margin="normal"
+              error={!isPasswordValid || !!formErrors.password}
+              helperText={formErrors.password}
+              required
+            />
 
-        <label>
-          Confirm Password:
-          <input
-            type={showPassword ? "text" : "password"}
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            className={!passwordsMatch ? "invalid-input" : ""}
-          />
-          {formErrors.confirmPassword && (
-            <p className="error-text">{formErrors.confirmPassword}</p>
-          )}
-        </label>
+            {passwordErrors.length > 0 && (
+              <List dense sx={{ pl: 2 }}>
+                {passwordErrors.map((err, idx) => (
+                  <ListItem key={idx} sx={{ py: 0 }}>
+                    <ListItemText
+                      primaryTypographyProps={{
+                        color: "error",
+                        variant: "body2",
+                      }}
+                      primary={`• ${err}`}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            )}
 
-        <label>
-          <input
-            type="checkbox"
-            checked={showPassword}
-            onChange={togglePasswordVisibility}
-          />{" "}
-          Show Passwords
-        </label>
+            <TextField
+              fullWidth
+              label="Confirm Password"
+              name="confirmPassword"
+              type={showPassword ? "text" : "password"}
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              margin="normal"
+              error={!passwordsMatch || !!formErrors.confirmPassword}
+              helperText={formErrors.confirmPassword}
+              required
+            />
 
-        <button type="submit" disabled={!isPasswordValid || !passwordsMatch}>
-          Submit
-        </button>
-
-        <p onClick={() => navigate("/signin")} className="login-link">
-          Do you have an account? Login
-        </p>
-
-        <div className="password-requirements">
-          <h3>Password Requirements:</h3>
-          <ul>
-            <li className={formData.password.length >= 8 ? "met" : ""}>
-              At least 8 characters long
-            </li>
-            <li className={/[A-Z]/.test(formData.password) ? "met" : ""}>
-              At least one uppercase letter
-            </li>
-            <li className={/[a-z]/.test(formData.password) ? "met" : ""}>
-              At least one lowercase letter
-            </li>
-            <li className={/[0-9]/.test(formData.password) ? "met" : ""}>
-              At least one number
-            </li>
-            <li
-              className={
-                /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password)
-                  ? "met"
-                  : ""
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={showPassword}
+                  onChange={togglePasswordVisibility}
+                />
               }
+              label="Show Passwords"
+            />
+
+            <Box mt={2}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                disabled={!isPasswordValid || !passwordsMatch}
+              >
+                Submit
+              </Button>
+            </Box>
+
+            <Typography
+              variant="body2"
+              align="center"
+              sx={{
+                mt: 2,
+                cursor: "pointer",
+                color: "primary.main",
+                textDecoration: "underline",
+              }}
+              onClick={() => navigate("/signin")}
             >
-              At least one special character
-            </li>
-          </ul>
-        </div>
-      </form>
-    </div>
+              Do you have an account? Login
+            </Typography>
+          </form>
+        </Paper>
+      </Container>
+      <Footer />
+    </Box>
   );
 }

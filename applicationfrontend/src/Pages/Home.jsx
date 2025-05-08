@@ -6,40 +6,22 @@ import {
   Container,
   Paper,
   Divider,
-  AppBar,
-  Toolbar,
-  IconButton,
 } from "@mui/material";
 import {
   AdminPanelSettings as AdminIcon,
   Person as UserIcon,
-  Menu as MenuIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export default function Home() {
   const navigate = useNavigate();
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      {/* App Bar */}
-      <AppBar position="static">
-        <Toolbar>
-          <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
-            <img
-              src={logo}
-              alt="BikeKade.lk Logo"
-              style={{ height: "40px", marginRight: "10px" }}
-            />
-            <Typography variant="h6" component="div">
-              BikeKade.lk
-            </Typography>
-          </Box>
-        </Toolbar>
-      </AppBar>
-
-      {/* Main Content */}
+      <Header />
       <Container
         component="main"
         sx={{
@@ -181,27 +163,7 @@ export default function Home() {
           </Paper>
         </Box>
       </Container>
-
-      {/* Footer */}
-      <Box
-        component="footer"
-        sx={{
-          py: 3,
-          px: 2,
-          mt: "auto",
-          backgroundColor: "primary.main",
-          color: "white",
-        }}
-      >
-        <Container maxWidth="sm">
-          <Typography variant="body1" align="center">
-            © {new Date().getFullYear()} BikeKade.lk - All Rights Reserved
-          </Typography>
-          <Typography variant="body2" align="center" sx={{ mt: 1 }}>
-            The ultimate destination for motorcycle enthusiasts
-          </Typography>
-        </Container>
-      </Box>
+      <Footer />
     </Box>
   );
 }
