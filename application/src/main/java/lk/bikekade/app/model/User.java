@@ -1,9 +1,10 @@
 package lk.bikekade.app.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class User {
@@ -18,10 +19,16 @@ public class User {
     private String pno;
     private String address;
     private String password;
+    
+    // Add products relationship
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore  // To prevent circular reference in JSON
+    private List<Product> products = new ArrayList<>();
 
     public User() {
     }
 
+    // Existing getters and setters...    
     public int getId() {
         return id;
     }
@@ -76,5 +83,26 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    // Add products getter and setter
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+    
+    // Helper method to add a product
+    public void addProduct(Product product) {
+        products.add(product);
+        product.setUser(this);
+    }
+    
+    // Helper method to remove a product
+    public void removeProduct(Product product) {
+        products.remove(product);
+        product.setUser(null);
     }
 }

@@ -1,9 +1,13 @@
 package lk.bikekade.app.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lk.bikekade.app.model.User;
@@ -35,6 +39,17 @@ public class UserController {
         return userService.getUserById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));
     }
+    
+    // READ ONE BY USERNAME
+    @GetMapping("/name/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        Optional<User> user = userService.getUserByUsername(username);
+        if (user.isPresent()) {
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("User not found with username " + username, HttpStatus.NOT_FOUND);
+        }
+    }
 
     // UPDATE
     @PutMapping("/update/{id}")
@@ -49,9 +64,26 @@ public class UserController {
         return "User with ID " + id + " has been deleted";
     }
 
-    // LOGIN
+    // LOGIN with more detailed response
     @PostMapping("/login")
-    public boolean login(@RequestBody User loginRequest) {
-        return userService.loginUser(loginRequest.getUname(), loginRequest.getPassword()).isPresent();
+    public ResponseEntity<?> login(@RequestBody User loginRequest) {
+        Optional<User> user = userService.loginUser(loginRequest.getUname(), loginRequest.getPassword());
+        
+        if (user.isPresent()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("userId", user.get().getId());
+            response.put("username", user.get().getUname());
+            response.put("fullName", user.get().getFname() + " " + 
+                         (user.get().getLname() != null ? user.get().getLname() : ""));
+            
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Invalid username or password");
+            
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
     }
 }

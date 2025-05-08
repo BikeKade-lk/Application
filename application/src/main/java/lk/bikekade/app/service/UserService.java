@@ -9,6 +9,7 @@ public interface UserService {
     User saveUser(User user);
     List<User> getAllUsers();
     Optional<User> getUserById(int id);
+    Optional<User> getUserByUsername(String username);
     User updateUser(int id, User user);
     void deleteUser(int id);
     Optional<User> loginUser(String uname, String password);

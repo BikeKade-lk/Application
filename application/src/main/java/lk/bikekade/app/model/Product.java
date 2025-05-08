@@ -1,12 +1,6 @@
 package lk.bikekade.app.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "products")
@@ -28,7 +22,6 @@ public class Product {
 
     private int price;
     
-    // New fields for product type functionality
     @Column(length = 20)
     private String productType;
     
@@ -40,36 +33,41 @@ public class Product {
     
     @Column(length = 50)
     private String bikeModel;
+    
+    // Add user relationship
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    // Default constructor
     public Product() {
-        // Default to accessory type when creating new products
         this.productType = "accessory";
     }
 
-    public Product(int id, String name, String image, String description, int price) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.description = description;
-        this.price = price;
-        this.productType = "accessory"; // Default value
-    }
-    
-    // Full constructor with all fields
+    // Existing constructors
     public Product(int id, String name, String image, String description, int price, 
-                  String productType, String brand, String partType, String bikeModel) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.description = description;
-        this.price = price;
-        this.productType = productType;
-        this.brand = brand;
-        this.partType = partType;
-        this.bikeModel = bikeModel;
+            String productType, String brand, String partType, String bikeModel) {
+  this.id = id;
+  this.name = name;
+  this.image = image;
+  this.description = description;
+  this.price = price;
+  this.productType = productType;
+  this.brand = brand;
+  this.partType = partType;
+  this.bikeModel = bikeModel;
+}
+
+    // Add user getter and setter
+    public User getUser() {
+        return user;
     }
 
-    // Existing getters and setters
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+ // Existing getters and setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

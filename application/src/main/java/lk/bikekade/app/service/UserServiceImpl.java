@@ -43,6 +43,13 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserById(int id) {
         return userRepository.findById(id);
     }
+    
+    @Override
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findAll().stream()
+            .filter(user -> user.getUname().equals(username))
+            .findFirst();
+    }
 
     @Override
     @Transactional

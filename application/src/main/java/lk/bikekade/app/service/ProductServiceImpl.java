@@ -8,17 +8,43 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lk.bikekade.app.model.Product;
+import lk.bikekade.app.model.User;
 import lk.bikekade.app.repository.ProductRepository;
+import lk.bikekade.app.repository.UserRepository;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    @Transactional
+    public Product saveProduct(Product product, User user) {
+        validateProduct(product);
+        product.setUser(user);
+        return productRepository.save(product);
+    }
+    
+    @Override
+    @Transactional
+    public Product saveProduct(Product product, int userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+        return saveProduct(product, user);
+    }
 
     @Override
     @Transactional
     public Product saveProduct(Product product) {
+        validateProduct(product);
+        return productRepository.save(product);
+    }
+    
+    private void validateProduct(Product product) {
         // Basic validation
         if (product.getName() == null || product.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("Product name cannot be empty");
@@ -49,17 +75,28 @@ public class ProductServiceImpl implements ProductService {
         
         // Handle potential large image data
         if (product.getImage() != null && product.getImage().length() > 1_000_000) {
-            // If image is very large, you might want to compress it or handle it differently
-            // For now, we'll just log it
             System.out.println("Large image detected: " + product.getImage().length() + " characters");
         }
-        
-        return productRepository.save(product);
     }
 
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+    
+    @Override
+    public List<Product> getProductsByUser(User user) {
+        return productRepository.findByUser(user);
+    }
+    
+    @Override
+    public List<Product> getProductsByUserId(int userId) {
+        return productRepository.findByUserId(userId);
+    }
+    
+    @Override
+    public List<Product> getProductsByUsername(String username) {
+        return productRepository.findByUserUname(username);
     }
 
     @Override
@@ -72,6 +109,9 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(int id, Product product) {
         Product existing = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id " + id));
+        
+        // Keep the existing user reference
+        User user = existing.getUser();
                 
         // Update fields only if they're provided
         if (product.getName() != null && !product.getName().trim().isEmpty()) {
@@ -117,8 +157,7 @@ public class ProductServiceImpl implements ProductService {
                 }
             }
         } else {
-            // If product type isn't provided, check if the existing is a spare part
-            // and the new data contains updates to spare part fields
+            // Handle spare part fields if product type isn't provided
             if ("spare part".equals(existing.getProductType())) {
                 if (product.getBrand() != null) {
                     if (product.getBrand().trim().isEmpty()) {
@@ -145,6 +184,9 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         
+        // Set the user relationship back
+        existing.setUser(user);
+        
         return productRepository.save(existing);
     }
 
@@ -156,5 +198,15 @@ public class ProductServiceImpl implements ProductService {
             throw new RuntimeException("Cannot delete. Product not found with id " + id);
         }
         productRepository.deleteById(id);
+    }
+    
+    @Override
+    public boolean userOwnsProduct(int userId, int productId) {
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isPresent()) {
+            User user = product.get().getUser();
+            return user != null && user.getId() == userId;
+        }
+        return false;
     }
 }
