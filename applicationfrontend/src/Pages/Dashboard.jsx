@@ -10,9 +10,9 @@ import {
 import axios from "axios";
 
 // Import components
-import DashboardAppBar from "../components/DashboardAppBar";
-import ProductTable from "../components/ProductTable";
-import ProductFormDialog from "../components/ProductFormDialog";
+import DashboardAppBar from "../components/dashboard/DashboardAppBar";
+import ProductTable from "../components/dashboard/ProductTable";
+import ProductFormDialog from "../components/dashboard/ProductFormDialog";
 
 // API endpoint
 const API_URL = "http://localhost:8080/product";
