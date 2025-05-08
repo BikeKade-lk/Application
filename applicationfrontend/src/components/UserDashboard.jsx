@@ -5,22 +5,13 @@ import {
   TextField, InputAdornment, CircularProgress,
   Snackbar, Alert, Drawer, List, ListItem, ListItemText, ListItemIcon,
   Divider, FormControl, InputLabel, Select, MenuItem, Pagination,
-  Badge, Dialog, DialogTitle, DialogContent, DialogActions,
   Chip
 } from '@mui/material';
 import {
   Search as SearchIcon,
-  ShoppingCart as CartIcon,
-  Favorite as FavoriteIcon,
-  FavoriteBorder as FavoriteBorderIcon,
   FilterList as FilterIcon,
   DirectionsBike as BikeIcon,
-  Build as BuildIcon,
-  Category as CategoryIcon,
-  Home as HomeIcon,
-  Person as PersonIcon,
   Menu as MenuIcon,
-  History as HistoryIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 
@@ -40,13 +31,6 @@ export default function UserDashboard() {
   });
   const [page, setPage] = useState(1);
   const [productsPerPage] = useState(12);
-
-  // Shopping cart state
-  const [cart, setCart] = useState([]);
-  const [cartOpen, setCartOpen] = useState(false);
-
-  // Favorites state
-  const [favorites, setFavorites] = useState([]);
 
   // Constants
   const API_URL = 'http://localhost:8080/product';
@@ -112,75 +96,10 @@ export default function UserDashboard() {
     setPage(1); // Reset to first page
   }
 
-  function toggleFavorite(product) {
-    const isAlreadyFavorite = favorites.some(fav => fav.id === product.id);
-    
-    if (isAlreadyFavorite) {
-      // Remove from favorites
-      setFavorites(favorites.filter(fav => fav.id !== product.id));
-      showAlert('Removed from favorites', 'info');
-    } else {
-      // Add to favorites
-      setFavorites([...favorites, product]);
-      showAlert('Added to favorites', 'success');
-    }
-  }
-
-  function addToCart(product) {
-    // Check if product is already in cart
-    const existingItem = cart.find(item => item.product.id === product.id);
-    
-    if (existingItem) {
-      // Increase quantity
-      setCart(
-        cart.map(item => 
-          item.product.id === product.id 
-            ? { ...item, quantity: item.quantity + 1 } 
-            : item
-        )
-      );
-    } else {
-      // Add new item
-      setCart([...cart, { product, quantity: 1 }]);
-    }
-    
-    showAlert(`${product.name} added to cart`, 'success');
-  }
-
-  function removeFromCart(productId) {
-    setCart(cart.filter(item => item.product.id !== productId));
-    showAlert('Item removed from cart', 'info');
-  }
-
-  function updateCartQuantity(productId, newQuantity) {
-    if (newQuantity < 1) return;
-    
-    setCart(
-      cart.map(item => 
-        item.product.id === productId 
-          ? { ...item, quantity: newQuantity } 
-          : item
-      )
-    );
-  }
-
-  function handleCartClose() {
-    setCartOpen(false);
-  }
-
   function handlePageChange(event, value) {
     setPage(value);
     window.scrollTo(0, 0); // Scroll to top when page changes
   }
-
-  // Get total items in cart
-  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
-  
-  // Get total cart value
-  const cartTotal = cart.reduce(
-    (total, item) => total + (item.product.price * item.quantity), 
-    0
-  );
 
   async function fetchProducts() {
     setLoading(true);
@@ -240,29 +159,7 @@ export default function UserDashboard() {
   // Effect to fetch products on component mount
   useEffect(() => {
     fetchProducts();
-    
-    // Load cart and favorites from localStorage
-    const savedCart = localStorage.getItem('bikeKadeCart');
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
-    
-    const savedFavorites = localStorage.getItem('bikeKadeFavorites');
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
-    }
-    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
-  // Save cart and favorites to localStorage when they change
-  useEffect(() => {
-    localStorage.setItem('bikeKadeCart', JSON.stringify(cart));
-  }, [cart]);
-  
-  useEffect(() => {
-    localStorage.setItem('bikeKadeFavorites', JSON.stringify(favorites));
-  }, [favorites]);
 
   // Filter and paginate products
   const filteredProducts = filterProducts(products);
@@ -366,137 +263,14 @@ export default function UserDashboard() {
     </Box>
   );
 
-  // Shopping cart dialog
-  const cartDialog = (
-    <Dialog
-      open={cartOpen}
-      onClose={handleCartClose}
-      maxWidth="md"
-      fullWidth
-    >
-      <DialogTitle>Shopping Cart</DialogTitle>
-      <DialogContent>
-        {cart.length === 0 ? (
-          <Typography variant="body1" sx={{ my: 3, textAlign: 'center' }}>
-            Your cart is empty.
-          </Typography>
-        ) : (
-          <>
-            <List>
-              {cart.map(item => (
-                <ListItem key={item.product.id} divider>
-                  <Box sx={{ display: 'flex', width: '100%', alignItems: 'center' }}>
-                    <Box sx={{ width: 60, mr: 2 }}>
-                      {item.product.image ? (
-                        <img 
-                          src={item.product.image} 
-                          alt={item.product.name} 
-                          style={{ width: 60, height: 60, objectFit: 'cover' }}
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = 'https://via.placeholder.com/60x60?text=No+Image';
-                          }}
-                        />
-                      ) : (
-                        <Box sx={{ width: 60, height: 60, bgcolor: 'grey.300', display: 'flex', 
-                          alignItems: 'center', justifyContent: 'center' }}>
-                          No img
-                        </Box>
-                      )}
-                    </Box>
-                    
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="subtitle1">{item.product.name}</Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Rs.{Number(item.product.price).toFixed(2)} each
-                      </Typography>
-                    </Box>
-                    
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Button 
-                        size="small" 
-                        variant="outlined" 
-                        onClick={() => updateCartQuantity(item.product.id, item.quantity - 1)}
-                      >
-                        -
-                      </Button>
-                      <Typography>{item.quantity}</Typography>
-                      <Button 
-                        size="small" 
-                        variant="outlined" 
-                        onClick={() => updateCartQuantity(item.product.id, item.quantity + 1)}
-                      >
-                        +
-                      </Button>
-                    </Box>
-                    
-                    <Box sx={{ ml: 3 }}>
-                      <Typography variant="subtitle1">
-                        Rs.{(item.product.price * item.quantity).toFixed(2)}
-                      </Typography>
-                    </Box>
-                    
-                    <Button 
-                      color="error" 
-                      onClick={() => removeFromCart(item.product.id)}
-                      sx={{ ml: 2 }}
-                    >
-                      Remove
-                    </Button>
-                  </Box>
-                </ListItem>
-              ))}
-            </List>
-            
-            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="h6">
-                Total: Rs.{cartTotal.toFixed(2)}
-              </Typography>
-              <Button variant="contained" color="primary">
-                Proceed to Checkout
-              </Button>
-            </Box>
-          </>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleCartClose}>Close</Button>
-      </DialogActions>
-    </Dialog>
-  );
-
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* App Bar */}
+      {/* App Bar - Simplified with only logo and name */}
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
             <BikeIcon sx={{ mr: 1 }} /> BikeKade.lk
           </Typography>
-          
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <IconButton color="inherit">
-              <HomeIcon />
-            </IconButton>
-            <IconButton color="inherit">
-              <PersonIcon />
-            </IconButton>
-            <IconButton color="inherit" onClick={() => setCartOpen(true)}>
-              <Badge badgeContent={cartItemCount} color="error">
-                <CartIcon />
-              </Badge>
-            </IconButton>
-          </Box>
         </Toolbar>
       </AppBar>
 
@@ -508,9 +282,6 @@ export default function UserDashboard() {
       >
         {filterDrawer}
       </Drawer>
-
-      {/* Shopping Cart Dialog */}
-      {cartDialog}
 
       {/* Main Content */}
       <Box sx={{ p: 2 }}>
@@ -671,21 +442,10 @@ export default function UserDashboard() {
                     <Button 
                       size="small" 
                       variant="contained" 
-                      onClick={() => addToCart(product)}
-                      startIcon={<CartIcon />}
                       fullWidth
                     >
-                      Add to Cart
+                      View Details
                     </Button>
-                    <IconButton 
-                      onClick={() => toggleFavorite(product)}
-                      color="primary"
-                      aria-label="add to favorites"
-                    >
-                      {favorites.some(fav => fav.id === product.id) 
-                        ? <FavoriteIcon color="error" /> 
-                        : <FavoriteBorderIcon />}
-                    </IconButton>
                   </CardActions>
                 </Card>
               </Grid>

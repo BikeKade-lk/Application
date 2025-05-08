@@ -18,8 +18,9 @@ export default function Login() {
     try {
       // Make a request to the backend for login validation
       const response = await axios.post("http://localhost:8080/user/login", credentials);
-      if (response.data.success) {
-        navigate("/AdminDashboard");
+      // The backend returns a boolean directly, not an object with success property
+      if (response.data === true) {
+        navigate("/admin");
       } else {
         alert("Invalid username or password");
       }
