@@ -9,6 +9,7 @@ export default function Login() {
     uname: "",
     password: ""
   });
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -18,14 +19,23 @@ export default function Login() {
     try {
       // Make a request to the backend for login validation
       const response = await axios.post("http://localhost:8080/user/login", credentials);
-      // The backend returns a boolean directly, not an object with success property
-      if (response.data === true) {
+      
+      // The backend returns a JSON object with user details and success property
+      if (response.data.success) {
+        // Store user info in localStorage for persistence
+        localStorage.setItem("user", JSON.stringify({
+          id: response.data.userId,
+          username: response.data.username,
+          fullName: response.data.fullName
+        }));
+        
+        // Navigate to admin dashboard
         navigate("/admin");
       } else {
-        alert("Invalid username or password");
+        setError("Invalid username or password");
       }
     } catch (error) {
-      alert("Login failed. Please try again.");
+      setError("Login failed. Please try again.");
       console.error("Login error:", error);
     }
   };
@@ -33,6 +43,7 @@ export default function Login() {
   return (
     <div>
       <h1>Login</h1>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <table>
         <tbody>
           <tr>

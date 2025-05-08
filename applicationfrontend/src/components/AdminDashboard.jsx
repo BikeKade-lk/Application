@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
   Typography,
-  IconButton,
   Button,
   Box,
   Table,
@@ -26,13 +26,16 @@ import {
   Select,
   MenuItem,
   FormHelperText,
+  Avatar,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import ImageIcon from "@mui/icons-material/Image";
+import LogoutIcon from "@mui/icons-material/Logout";
 import axios from "axios";
 
 export default function AdminDashboard() {
-  // Define state first
+  const navigate = useNavigate();
+  // Define state for user
+  const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -78,7 +81,30 @@ export default function AdminDashboard() {
   // API endpoint
   const API_URL = "http://localhost:8080/product";
 
-  // Define all functions before use
+  // Load user info on component mount
+  useEffect(() => {
+    const userInfo = localStorage.getItem("user");
+    if (!userInfo) {
+      // Redirect to login if no user info exists
+      navigate("/login");
+      return;
+    }
+    
+    const parsedUser = JSON.parse(userInfo);
+    setUser(parsedUser);
+    
+    // This will trigger the products fetch effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]);
+
+  // Fetch products when user changes
+  useEffect(() => {
+    if (user) {
+      fetchUserProducts();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
   function showAlert(message, severity = "info") {
     setAlertInfo({ open: true, message, severity });
   }
@@ -194,14 +220,16 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       if (editingProduct) {
-        await axios.put(`${API_URL}/update/${editingProduct.id}`, form);
+        // Add userId parameter to ensure ownership check
+        await axios.put(`${API_URL}/update/${editingProduct.id}?userId=${user.id}`, form);
         showAlert("Product updated successfully", "success");
       } else {
-        await axios.post(`${API_URL}/add`, form);
+        // Use the user/{username}/add endpoint to associate the product with the user
+        await axios.post(`${API_URL}/user/${user.username}/add`, form);
         showAlert("Product added successfully", "success");
       }
       handleClose();
-      fetchProducts();
+      fetchUserProducts();
     } catch (error) {
       console.error("Error saving product:", error);
       showAlert(
@@ -220,9 +248,10 @@ export default function AdminDashboard() {
 
     setLoading(true);
     try {
-      await axios.delete(`${API_URL}/delete/${id}`);
+      // Add userId parameter to ensure ownership check
+      await axios.delete(`${API_URL}/delete/${id}?userId=${user.id}`);
       showAlert("Product deleted successfully", "success");
-      fetchProducts();
+      fetchUserProducts();
     } catch (error) {
       console.error("Error deleting product:", error);
       showAlert("Failed to delete product. Please try again.", "error");
@@ -231,10 +260,13 @@ export default function AdminDashboard() {
     }
   }
 
-  async function fetchProducts() {
+  async function fetchUserProducts() {
+    if (!user) return;
+    
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/getall`);
+      // Use the user/name/{username} endpoint to get products for this user
+      const response = await axios.get(`${API_URL}/user/name/${user.username}`);
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -244,23 +276,40 @@ export default function AdminDashboard() {
     }
   }
 
-  // Effects
-  useEffect(() => {
-    fetchProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  function handleLogout() {
+    localStorage.removeItem("user");
+    navigate("/login");
+  }
+
+  // Display loading while checking auth
+  if (!user) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       {/* App Bar */}
       <AppBar position="static">
-        <Toolbar>          
+        <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Admin Dashboard
+            {user.fullName}'s Dashboard
           </Typography>
-          <Button color="inherit" onClick={() => handleOpen()}>
-            Add Product
-          </Button>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Avatar sx={{ bgcolor: "secondary.main" }}>
+              {user.fullName.charAt(0)}
+            </Avatar>
+            <Typography variant="subtitle1">{user.username}</Typography>
+            <Button color="inherit" onClick={handleLogout} startIcon={<LogoutIcon />}>
+              Logout
+            </Button>
+            <Button color="inherit" onClick={() => handleOpen()}>
+              Add Product
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -273,6 +322,9 @@ export default function AdminDashboard() {
 
       {/* Product Table */}
       <Box sx={{ p: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2 }}>
+          Your Products
+        </Typography>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -290,7 +342,7 @@ export default function AdminDashboard() {
               {products.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} align="center">
-                    {loading ? "Loading..." : "No products found"}
+                    {loading ? "Loading..." : "No products found. Add your first product!"}
                   </TableCell>
                 </TableRow>
               ) : (
