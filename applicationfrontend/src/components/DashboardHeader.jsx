@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   AppBar,
   Toolbar,
@@ -6,31 +6,16 @@ import {
   Button,
   Box,
   Container,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
-  Divider,
   useTheme,
   useMediaQuery
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 
 const DashboardHeader = ({ user, onAddProduct, onLogout }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
 
   // Format user's name with proper capitalization
   const formattedName = user.fullName
@@ -40,29 +25,20 @@ const DashboardHeader = ({ user, onAddProduct, onLogout }) => {
         .join(" ")
     : "User";
 
-  // Get user's initials for the avatar
-  const userInitials = user.fullName
-    ? user.fullName
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-    : "U";
-
   return (
-    <AppBar 
-      position="sticky" 
+    <AppBar
+      position="sticky"
       elevation={0}
-      sx={{ 
-        bgcolor: "background.paper", 
+      sx={{
+        bgcolor: "background.paper",
         borderBottom: `1px solid ${theme.palette.divider}`,
-        boxShadow: '0 4px 6px rgba(0,0,0,0.04)'
+        boxShadow: "0 4px 6px rgba(0,0,0,0.04)",
       }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ height: 70 }}>
           {/* Dashboard Title */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <DashboardIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
             <Typography
               variant="h6"
@@ -81,18 +57,18 @@ const DashboardHeader = ({ user, onAddProduct, onLogout }) => {
           {/* Action Buttons */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {!isMobile && (
-              <Typography 
-                variant="body1" 
-                sx={{ 
+              <Typography
+                variant="body1"
+                sx={{
                   fontWeight: 500,
                   mr: 2,
-                  color: theme.palette.text.secondary 
+                  color: theme.palette.text.secondary,
                 }}
               >
                 Welcome, {formattedName}
               </Typography>
             )}
-            
+
             <Button
               variant="outlined"
               color="primary"
@@ -106,12 +82,12 @@ const DashboardHeader = ({ user, onAddProduct, onLogout }) => {
                 "&:hover": {
                   borderWidth: "2px",
                 },
-                display: { xs: "none", sm: "flex" }
+                display: { xs: "none", sm: "flex" },
               }}
             >
               Add Product
             </Button>
-            
+
             <Button
               variant="contained"
               color="primary"
@@ -125,7 +101,7 @@ const DashboardHeader = ({ user, onAddProduct, onLogout }) => {
                 "&:hover": {
                   boxShadow: "0 6px 10px rgba(0,0,0,0.15)",
                 },
-                display: { xs: "none", sm: "flex" }
+                display: { xs: "none", sm: "flex" },
               }}
             >
               Logout
@@ -134,66 +110,14 @@ const DashboardHeader = ({ user, onAddProduct, onLogout }) => {
             {/* Mobile buttons */}
             {isMobile && (
               <>
-                <IconButton
-                  color="primary"
-                  onClick={onAddProduct}
-                  size="small"
-                >
+                <Button color="primary" onClick={onAddProduct} size="small">
                   <AddRoundedIcon />
-                </IconButton>
-                
-                <IconButton
-                  color="primary"
-                  onClick={onLogout}
-                  size="small"
-                >
+                </Button>
+                <Button color="primary" onClick={onLogout} size="small">
                   <ExitToAppRoundedIcon />
-                </IconButton>
+                </Button>
               </>
             )}
-            
-            {/* User Profile */}
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-              sx={{ ml: 1 }}
-            >
-              <Avatar 
-                sx={{ 
-                  width: 35, 
-                  height: 35,
-                  bgcolor: theme.palette.secondary.main,
-                  color: theme.palette.secondary.contrastText
-                }}
-              >
-                {userInitials}
-              </Avatar>
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-              <MenuItem onClick={handleMenuClose}>Account Settings</MenuItem>
-              <Divider />
-              <MenuItem onClick={onLogout}>Sign Out</MenuItem>
-            </Menu>
           </Box>
         </Toolbar>
       </Container>
