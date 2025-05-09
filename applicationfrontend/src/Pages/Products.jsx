@@ -1,5 +1,5 @@
 // src/Pages/Products.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Box, Typography, Snackbar, Alert } from "@mui/material";
 import axios from "axios";
 
@@ -41,13 +41,13 @@ export default function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   // Alert handlers
-  const showAlert = (message, severity = "info") => {
+  const showAlert = useCallback((message, severity = "info") => {
     setAlertInfo({ open: true, message, severity });
-  };
+  }, []);
 
-  const handleCloseAlert = () => {
+  const handleCloseAlert = useCallback(() => {
     setAlertInfo((prev) => ({ ...prev, open: false }));
-  };
+  }, []);
 
   // UI event handlers
   const handleDrawerToggle = () => {
@@ -96,8 +96,8 @@ export default function Products() {
     setDetailsDialogOpen(false);
   };
 
-  // Fetch products
-  const fetchProducts = async () => {
+  // Fetch products with useCallback
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
       const response = await axios.get(`${API_URL}/getall`);
@@ -108,7 +108,7 @@ export default function Products() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showAlert]);
 
   // Apply filters
   const filterProducts = (products) => {
@@ -156,7 +156,7 @@ export default function Products() {
   // Load products on mount
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   const filteredProducts = filterProducts(products);
   const paginatedProducts = filteredProducts.slice(
