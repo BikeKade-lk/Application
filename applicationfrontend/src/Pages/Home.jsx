@@ -12,7 +12,7 @@ import {
   Person as UserIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/images/logo.png";
+import logo from "../assets/logo.png";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
