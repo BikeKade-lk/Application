@@ -14,8 +14,17 @@ import {
   Paper,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
+  Grid,
+  Alert,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -35,6 +44,7 @@ export default function Signup() {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [formErrors, setFormErrors] = useState({});
+  const [signupSuccess, setSignupSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,64 +105,122 @@ export default function Signup() {
     if (!validateForm()) return;
 
     if (!isPasswordValid) {
-      alert("Please fix the password issues before submitting.");
       return;
     }
 
     try {
       const { confirmPassword, ...userData } = formData;
       await axios.post("http://localhost:8080/user/add", userData);
-      alert("User added successfully");
+      setSignupSuccess(true);
 
-      setFormData({
-        fname: "",
-        lname: "",
-        uname: "",
-        pno: "",
-        address: "",
-        password: "",
-        confirmPassword: "",
-      });
-      setPasswordErrors([]);
-      setIsPasswordValid(false);
-      setPasswordsMatch(true);
-      setFormErrors({});
+      setTimeout(() => {
+        setFormData({
+          fname: "",
+          lname: "",
+          uname: "",
+          pno: "",
+          address: "",
+          password: "",
+          confirmPassword: "",
+        });
+        setPasswordErrors([]);
+        setIsPasswordValid(false);
+        setPasswordsMatch(true);
+        setFormErrors({});
+        navigate("/signin");
+      }, 2000);
     } catch (error) {
       console.error("Error adding user:", error);
-      alert("Failed to add user");
+      setFormErrors({
+        ...formErrors,
+        form: "Failed to create account. Please try again.",
+      });
     }
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", bgcolor: "#f5f7fa" }}>
       <Header />
       <Container maxWidth="sm" sx={{ py: 6 }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h4" align="center" gutterBottom>
-            Sign Up
+        <Paper 
+          elevation={3} 
+          sx={{ 
+            p: 4, 
+            borderRadius: 2,
+            boxShadow: "0 8px 24px rgba(0,0,0,0.08)", 
+          }}
+        >
+          <Typography 
+            variant="h4" 
+            align="center" 
+            gutterBottom
+            sx={{ 
+              fontWeight: 600, 
+              mb: 3,
+              color: "#333",
+            }}
+          >
+            Create Account
           </Typography>
 
-          <form onSubmit={handleSubmit} noValidate>
-            <TextField
-              fullWidth
-              label="First Name"
-              name="fname"
-              value={formData.fname}
-              onChange={handleChange}
-              margin="normal"
-              error={!!formErrors.fname}
-              helperText={formErrors.fname}
-              required
-            />
+          {signupSuccess && (
+            <Alert 
+              severity="success" 
+              sx={{ 
+                mb: 3,
+                borderRadius: 1,
+              }}
+            >
+              Account created successfully! Redirecting to sign in...
+            </Alert>
+          )}
 
-            <TextField
-              fullWidth
-              label="Last Name"
-              name="lname"
-              value={formData.lname}
-              onChange={handleChange}
-              margin="normal"
-            />
+          {formErrors.form && (
+            <Alert 
+              severity="error" 
+              sx={{ 
+                mb: 3,
+                borderRadius: 1,
+              }}
+            >
+              {formErrors.form}
+            </Alert>
+          )}
+
+          <form onSubmit={handleSubmit} noValidate>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="First Name"
+                  name="fname"
+                  value={formData.fname}
+                  onChange={handleChange}
+                  error={!!formErrors.fname}
+                  helperText={formErrors.fname}
+                  required
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 1,
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Last Name"
+                  name="lname"
+                  value={formData.lname}
+                  onChange={handleChange}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 1,
+                    },
+                  }}
+                />
+              </Grid>
+            </Grid>
 
             <TextField
               fullWidth
@@ -164,6 +232,12 @@ export default function Signup() {
               error={!!formErrors.uname}
               helperText={formErrors.uname}
               required
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1,
+                },
+              }}
             />
 
             <TextField
@@ -176,6 +250,11 @@ export default function Signup() {
               error={!!formErrors.pno}
               helperText={formErrors.pno}
               required
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1,
+                },
+              }}
             />
 
             <TextField
@@ -188,6 +267,11 @@ export default function Signup() {
               error={!!formErrors.address}
               helperText={formErrors.address}
               required
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1,
+                },
+              }}
             />
 
             <TextField
@@ -198,24 +282,53 @@ export default function Signup() {
               value={formData.password}
               onChange={handleChange}
               margin="normal"
-              error={!isPasswordValid || !!formErrors.password}
+              error={!isPasswordValid && formData.password !== "" || !!formErrors.password}
               helperText={formErrors.password}
               required
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1,
+                },
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={togglePasswordVisibility}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
 
-            {passwordErrors.length > 0 && (
-              <List dense sx={{ pl: 2 }}>
-                {passwordErrors.map((err, idx) => (
-                  <ListItem key={idx} sx={{ py: 0 }}>
-                    <ListItemText
-                      primaryTypographyProps={{
-                        color: "error",
-                        variant: "body2",
-                      }}
-                      primary={`• ${err}`}
-                    />
-                  </ListItem>
-                ))}
+            {formData.password && (
+              <List dense sx={{ bgcolor: "#f8f9fa", borderRadius: 1, mt: 1, mb: 2 }}>
+                {["At least 8 characters long", "At least one uppercase letter", "At least one lowercase letter", "At least one number", "At least one special character"].map((requirement, idx) => {
+                  const isError = passwordErrors.includes(requirement);
+                  return (
+                    <ListItem key={idx} sx={{ py: 0.5 }}>
+                      <ListItemIcon sx={{ minWidth: 30 }}>
+                        {isError ? (
+                          <ErrorOutlineIcon color="error" fontSize="small" />
+                        ) : (
+                          <CheckCircleOutlineIcon color="success" fontSize="small" />
+                        )}
+                      </ListItemIcon>
+                      <ListItemText
+                        primaryTypographyProps={{
+                          color: isError ? "error" : "success",
+                          variant: "body2",
+                          fontSize: "0.85rem",
+                        }}
+                        primary={requirement}
+                      />
+                    </ListItem>
+                  );
+                })}
               </List>
             )}
 
@@ -227,44 +340,78 @@ export default function Signup() {
               value={formData.confirmPassword}
               onChange={handleChange}
               margin="normal"
-              error={!passwordsMatch || !!formErrors.confirmPassword}
+              error={!passwordsMatch && formData.confirmPassword !== "" || !!formErrors.confirmPassword}
               helperText={formErrors.confirmPassword}
               required
-            />
-
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showPassword}
-                  onChange={togglePasswordVisibility}
-                />
-              }
-              label="Show Passwords"
-            />
-
-            <Box mt={2}>
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                disabled={!isPasswordValid || !passwordsMatch}
-              >
-                Submit
-              </Button>
-            </Box>
-
-            <Typography
-              variant="body2"
-              align="center"
               sx={{
-                mt: 2,
-                cursor: "pointer",
-                color: "primary.main",
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 1,
+                },
               }}
-              onClick={() => navigate("/signin")}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={togglePasswordVisibility}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              disabled={!isPasswordValid || !passwordsMatch}
+              sx={{
+                mt: 3,
+                py: 1.5,
+                bgcolor: "#3f51b5",
+                borderRadius: 1,
+                textTransform: "none",
+                fontWeight: 600,
+                boxShadow: "0 4px 12px rgba(63,81,181,0.2)",
+                "&:hover": {
+                  bgcolor: "#303f9f",
+                  boxShadow: "0 6px 16px rgba(63,81,181,0.3)",
+                },
+              }}
             >
-              Do you have an account? Sign In
-            </Typography>
+              Create Account
+            </Button>
+
+            <Box 
+              sx={{ 
+                mt: 4, 
+                pt: 3, 
+                borderTop: "1px solid #eaeaea",
+                textAlign: "center",
+              }}
+            >
+              <Typography variant="body2" color="textSecondary">
+                Already have an account?
+              </Typography>
+              <Typography
+                variant="body1"
+                onClick={() => navigate("/signin")}
+                sx={{
+                  color: "#3f51b5",
+                  cursor: "pointer",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                  fontWeight: 500,
+                  mt: 0.5,
+                }}
+              >
+                Sign in here
+              </Typography>
+            </Box>
           </form>
         </Paper>
       </Container>
