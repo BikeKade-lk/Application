@@ -1,7 +1,10 @@
 // src/components/products/SearchFilterBar.jsx
 import React from "react";
 import { Box, TextField, Button, InputAdornment } from "@mui/material";
-import { Search as SearchIcon, FilterList as FilterIcon } from "@mui/icons-material";
+import {
+  Search as SearchIcon,
+  FilterList as FilterIcon,
+} from "@mui/icons-material";
 
 function SearchFilterBar({ searchQuery, onSearchChange, onFilterToggle }) {
   return (

@@ -20,6 +20,13 @@ import {
 } from "@mui/icons-material";
 import { formatDate } from "./Constants";
 
+function capitalizeSentences(text) {
+  return text
+    .split(/(?<=[.!?])\s+/) // Split on sentence-ending punctuation
+    .map((sentence) => sentence.charAt(0).toUpperCase() + sentence.slice(1))
+    .join(" ");
+}
+
 function ProductDetailsDialog({ open, product, onClose }) {
   if (!product) return null;
 
@@ -33,7 +40,12 @@ function ProductDetailsDialog({ open, product, onClose }) {
             alignItems: "center",
           }}
         >
-          <Typography variant="h6">{product.name}</Typography>
+          <Typography variant="h6">
+            {product.name
+              .split(" ")
+              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(" ")}
+          </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
@@ -47,7 +59,10 @@ function ProductDetailsDialog({ open, product, onClose }) {
                 product.image ||
                 "https://via.placeholder.com/600x400?text=No+Image"
               }
-              alt={product.name}
+              alt={product.name
+                .split(" ")
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ")}
               style={{ width: "100%", borderRadius: "8px" }}
               onError={(e) => {
                 e.target.onerror = null;
@@ -63,11 +78,14 @@ function ProductDetailsDialog({ open, product, onClose }) {
 
             {/* Product description */}
             <Typography variant="body1" paragraph>
-              {product.description || "No description available"}
+              {product.description
+                ? capitalizeSentences(product.description)
+                : "No description available"}
             </Typography>
 
             {/* Product specifications */}
-            {(product.productType === "spare part" || product.productType === "accessory") && (
+            {(product.productType === "Spare Part" ||
+              product.productType === "Accessory") && (
               <Box sx={{ mb: 3 }}>
                 <Typography variant="h6" gutterBottom>
                   Specifications
@@ -112,9 +130,7 @@ function ProductDetailsDialog({ open, product, onClose }) {
                     </Typography>
                   </Grid>
                   <Grid item xs={8}>
-                    <Typography variant="body2">
-                      {product.bikeModel || "N/A"}
-                    </Typography>
+                    <Typography variant="body2">{product.bikeModel}</Typography>
                   </Grid>
                 </Grid>
               </Box>
@@ -130,7 +146,20 @@ function ProductDetailsDialog({ open, product, onClose }) {
                 <PersonIcon sx={{ mr: 1, color: "text.secondary" }} />
                 <Typography variant="body1">
                   {product.user
-                    ? `${product.user.fname} ${product.user.lname || ""}`
+                    ? `${product.user.fname
+                        .split(" ")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ")} ${
+                        product.user.lname
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() + word.slice(1)
+                          )
+                          .join(" ") || ""
+                      }`
                     : "Unknown Seller"}
                 </Typography>
               </Box>
@@ -138,7 +167,10 @@ function ProductDetailsDialog({ open, product, onClose }) {
               <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                 <HomeIcon sx={{ mr: 1, color: "text.secondary" }} />
                 <Typography variant="body1">
-                  {product.user?.address || "No contact information"}
+                  {product.user?.address
+                    .split(" ")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ") || "No contact information"}
                 </Typography>
               </Box>
 

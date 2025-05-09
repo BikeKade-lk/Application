@@ -1,6 +1,13 @@
 // src/components/products/ProductGrid.jsx
 import React from "react";
-import { Grid, Box, Typography, Button, CircularProgress, Pagination } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+  Pagination,
+} from "@mui/material";
 import ProductCard from "./ProductCard";
 
 function ProductGrid({
@@ -41,10 +48,7 @@ function ProductGrid({
       <Grid container spacing={3}>
         {paginatedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-            <ProductCard 
-              product={product} 
-              onViewDetails={onViewDetails} 
-            />
+            <ProductCard product={product} onViewDetails={onViewDetails} />
           </Grid>
         ))}
       </Grid>

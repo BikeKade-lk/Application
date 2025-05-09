@@ -14,7 +14,13 @@ import {
 } from "@mui/material";
 import { BRANDS, PART_TYPES, PRICE_RANGES } from "./Constants";
 
-function FilterDrawer({ open, filters, onFilterChange, onClose, onClearFilters }) {
+function FilterDrawer({
+  open,
+  filters,
+  onFilterChange,
+  onClose,
+  onClearFilters,
+}) {
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 250, p: 2 }} role="presentation">
@@ -34,8 +40,8 @@ function FilterDrawer({ open, filters, onFilterChange, onClose, onClearFilters }
               onChange={onFilterChange}
             >
               <MenuItem value="">All Types</MenuItem>
-              <MenuItem value="accessory">Accessory</MenuItem>
-              <MenuItem value="spare part">Spare Part</MenuItem>
+              <MenuItem value="Accessory">Accessory</MenuItem>
+              <MenuItem value="Spare Part">Spare Part</MenuItem>
             </Select>
           </FormControl>
 

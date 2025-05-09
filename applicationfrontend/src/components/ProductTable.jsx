@@ -19,14 +19,14 @@ const ProductTable = ({ products, loading, onEdit, onDelete }) => {
       <Typography variant="h5" sx={{ mb: 2 }}>
         Your Products
       </Typography>
-      
+
       {/* Loading Indicator */}
       {loading && (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
           <CircularProgress />
         </Box>
       )}
-      
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -52,12 +52,25 @@ const ProductTable = ({ products, loading, onEdit, onDelete }) => {
             ) : (
               products.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell>{product.name}</TableCell>
+                  <TableCell>
+                    {product.name
+                      .split(" ")
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                      )
+                      .join(" ")}
+                  </TableCell>
                   <TableCell>
                     {product.image ? (
                       <img
                         src={product.image}
-                        alt={product.name}
+                        alt={product.name
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() + word.slice(1)
+                          )
+                          .join(" ")}
                         style={{ width: 60, height: 40, objectFit: "cover" }}
                         onError={(e) => {
                           e.target.onerror = null;
@@ -85,12 +98,18 @@ const ProductTable = ({ products, loading, onEdit, onDelete }) => {
                       ? product.description.length > 50
                         ? product.description.substring(0, 50) + "..."
                         : product.description
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            )
+                            .join(" ")
                       : "No description"}
                   </TableCell>
                   <TableCell>Rs.{Number(product.price).toFixed(2)}</TableCell>
-                  <TableCell>{product.productType || "accessory"}</TableCell>
+                  <TableCell>{product.productType || "Accessory"}</TableCell>
                   <TableCell>
-                    {product.productType === "spare part" ? (
+                    {product.productType === "Spare Part" ? (
                       <>
                         {product.brand && (
                           <div>

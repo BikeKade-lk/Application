@@ -11,7 +11,7 @@ import CustomAlert from "../components/CustomAlert";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  
+
   // Define state for user
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
@@ -22,7 +22,7 @@ export default function Dashboard() {
     image: "",
     description: "",
     price: "",
-    productType: "accessory",
+    productType: "Accessory",
     brand: "",
     partType: "",
     bikeModel: "",
@@ -72,7 +72,7 @@ export default function Dashboard() {
       setForm({
         ...product,
         // Set default values for new fields if they don't exist
-        productType: product.productType || "accessory",
+        productType: product.productType || "Accessory",
         brand: product.brand || "",
         partType: product.partType || "",
         bikeModel: product.bikeModel || "",
@@ -85,7 +85,7 @@ export default function Dashboard() {
         image: "",
         description: "",
         price: "",
-        productType: "accessory",
+        productType: "Accessory",
         brand: "",
         partType: "",
         bikeModel: "",
@@ -146,20 +146,20 @@ export default function Dashboard() {
       return false;
     }
 
-    // Validate spare part specific fields
-    if (form.productType === "spare part") {
+    // Validate Spare Part specific fields
+    if (form.productType === "Spare Part") {
       if (!form.brand) {
-        showAlert("Brand is required for spare parts", "error");
+        showAlert("Brand is required for Spare Parts", "error");
         return false;
       }
 
       if (!form.partType) {
-        showAlert("Part type is required for spare parts", "error");
+        showAlert("Part type is required for Spare Parts", "error");
         return false;
       }
 
       if (!form.bikeModel) {
-        showAlert("Bike model is required for spare parts", "error");
+        showAlert("Bike model is required for Spare Parts", "error");
         return false;
       }
     }
@@ -256,18 +256,18 @@ export default function Dashboard() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       {/* App Bar */}
-      <DashboardHeader 
-        user={user} 
-        onAddProduct={() => handleOpen()} 
-        onLogout={handleLogout} 
+      <DashboardHeader
+        user={user}
+        onAddProduct={() => handleOpen()}
+        onLogout={handleLogout}
       />
 
       {/* Product Table */}
-      <ProductTable 
-        products={products} 
-        loading={loading} 
-        onEdit={handleOpen} 
-        onDelete={handleDelete} 
+      <ProductTable
+        products={products}
+        loading={loading}
+        onEdit={handleOpen}
+        onDelete={handleDelete}
       />
 
       {/* Dialog for Add/Edit */}

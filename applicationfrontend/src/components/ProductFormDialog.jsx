@@ -18,24 +18,24 @@ import {
 import ImageIcon from "@mui/icons-material/Image";
 
 // Constants for dropdown options
-const PRODUCT_TYPES = ["accessory", "spare part"];
+const PRODUCT_TYPES = ["Accessory", "Spare Part"];
 const BRANDS = ["Yamaha", "Honda", "Kawasaki", "Suzuki", "KTM", "Husqvarna"];
 const PART_TYPES = [
-  "engine part",
-  "body part",
-  "electric part",
-  "suspension",
-  "brakes",
-  "drivetrain",
-  "wheels and tires",
-  "exhaust system",
-  "air intake",
-  "cooling system",
-  "fuel system",
-  "controls and handlebars",
-  "frame and chassis",
-  "lighting",
-  "protection accessories",
+  "Engine Part",
+  "Body Part",
+  "Electric Part",
+  "Suspension",
+  "Brakes",
+  "Drivetrain",
+  "Wheels And Tires",
+  "Exhaust System",
+  "Air Intake",
+  "Cooling System",
+  "Fuel System",
+  "Controls And Handlebars",
+  "Frame And Chassis",
+  "Lighting",
+  "Protection Accessories",
 ];
 
 const ProductFormDialog = ({
@@ -64,7 +64,7 @@ const ProductFormDialog = ({
             labelId="product-type-label"
             id="product-type"
             name="productType"
-            value={form.productType || "accessory"}
+            value={form.productType || "Accessory"}
             label="Product Type"
             onChange={onChange}
           >
@@ -77,7 +77,7 @@ const ProductFormDialog = ({
         </FormControl>
 
         {/* Spare Part Specific Fields */}
-        {form.productType === "spare part" && (
+        {form.productType === "Spare Part" && (
           <>
             <FormControl
               fullWidth
@@ -102,7 +102,7 @@ const ProductFormDialog = ({
               </Select>
               {form.brand === "" && (
                 <FormHelperText>
-                  Brand is required for spare parts
+                  Brand is required for Spare Parts
                 </FormHelperText>
               )}
             </FormControl>
@@ -130,7 +130,7 @@ const ProductFormDialog = ({
               </Select>
               {form.partType === "" && (
                 <FormHelperText>
-                  Part type is required for spare parts
+                  Part type is required for Spare Parts
                 </FormHelperText>
               )}
             </FormControl>
@@ -145,7 +145,7 @@ const ProductFormDialog = ({
               error={form.bikeModel === ""}
               helperText={
                 form.bikeModel === ""
-                  ? "Bike model is required for spare parts"
+                  ? "Bike model is required for Spare Parts"
                   : "Use capital letters and hyphens only (no spaces)"
               }
               margin="normal"

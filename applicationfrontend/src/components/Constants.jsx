@@ -1,24 +1,31 @@
 // src/components/products/constants.js
 export const API_URL = "http://localhost:8080/product";
 
-export const BRANDS = ["Yamaha", "Honda", "Kawasaki", "Suzuki", "KTM", "Husqvarna"];
+export const BRANDS = [
+  "Yamaha",
+  "Honda",
+  "Kawasaki",
+  "Suzuki",
+  "KTM",
+  "Husqvarna",
+];
 
 export const PART_TYPES = [
-  "engine part",
-  "body part",
-  "electric part",
-  "suspension",
-  "brakes",
-  "drivetrain",
-  "wheels and tires",
-  "exhaust system",
-  "air intake",
-  "cooling system",
-  "fuel system",
-  "controls and handlebars",
-  "frame and chassis",
-  "lighting",
-  "protection accessories",
+  "Engine Part",
+  "Body Part",
+  "Electric Part",
+  "Suspension",
+  "Brakes",
+  "Drivetrain",
+  "Wheels And Tires",
+  "Exhaust System",
+  "Air Intake",
+  "Cooling System",
+  "Fuel System",
+  "Controls And Handlebars",
+  "Frame And Chassis",
+  "Lighting",
+  "Protection Accessories",
 ];
 
 export const PRICE_RANGES = [

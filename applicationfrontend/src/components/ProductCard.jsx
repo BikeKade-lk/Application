@@ -8,8 +8,15 @@ import {
   Typography,
   Button,
   Box,
-  Chip
+  Chip,
 } from "@mui/material";
+
+function capitalizeSentences(text) {
+  return text
+    .split(/(?<=[.!?])\s+/) // split on sentence boundaries
+    .map((sentence) => sentence.charAt(0).toUpperCase() + sentence.slice(1))
+    .join(" ");
+}
 
 function ProductCard({ product, onViewDetails }) {
   return (
@@ -24,19 +31,23 @@ function ProductCard({ product, onViewDetails }) {
         component="img"
         height="160"
         image={
-          product.image ||
-          "https://via.placeholder.com/300x160?text=No+Image"
+          product.image || "https://via.placeholder.com/300x160?text=No+Image"
         }
-        alt={product.name}
+        alt={product.name
+          .split(" ")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")}
         onError={(e) => {
           e.target.onerror = null;
-          e.target.src =
-            "https://via.placeholder.com/300x160?text=No+Image";
+          e.target.src = "https://via.placeholder.com/300x160?text=No+Image";
         }}
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography variant="h6" component="div">
-          {product.name}
+          {product.name
+            .split(" ")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ")}
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
           <Typography
@@ -56,9 +67,12 @@ function ProductCard({ product, onViewDetails }) {
           )}
         </Box>
         <Typography variant="body2" color="text.secondary">
-          {product.description?.length > 60
-            ? product.description.substring(0, 60) + "..."
-            : product.description || "No description available"}
+          {product.description
+            ? product.description.length > 60
+              ? capitalizeSentences(product.description.substring(0, 60)) +
+                "..."
+              : capitalizeSentences(product.description)
+            : "No description available"}
         </Typography>
 
         {product.productType === "spare part" && (
