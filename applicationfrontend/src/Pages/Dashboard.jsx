@@ -5,6 +5,7 @@ import axios from "axios";
 
 // Import custom components
 import DashboardHeader from "../components/DashboardHeader";
+import Footer from "../components/Footer";
 import ProductTable from "../components/ProductTable";
 import ProductFormDialog from "../components/ProductFormDialog";
 import CustomAlert from "../components/CustomAlert";
@@ -254,7 +255,13 @@ export default function Dashboard() {
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh", // This ensures the container takes at least the full viewport height
+      }}
+    >
       {/* App Bar */}
       <DashboardHeader
         user={user}
@@ -262,29 +269,35 @@ export default function Dashboard() {
         onLogout={handleLogout}
       />
 
-      {/* Product Table */}
-      <ProductTable
-        products={products}
-        loading={loading}
-        onEdit={handleOpen}
-        onDelete={handleDelete}
-      />
+      {/* Main Content - will grow to fill available space */}
+      <Box sx={{ flexGrow: 1, mb: 2 }}>
+        {/* Product Table */}
+        <ProductTable
+          products={products}
+          loading={loading}
+          onEdit={handleOpen}
+          onDelete={handleDelete}
+        />
 
-      {/* Dialog for Add/Edit */}
-      <ProductFormDialog
-        open={open}
-        onClose={handleClose}
-        form={form}
-        onChange={handleChange}
-        onImageChange={handleImageChange}
-        onSave={handleSave}
-        editingProduct={editingProduct}
-        imagePreview={imagePreview}
-        loading={loading}
-      />
+        {/* Dialog for Add/Edit */}
+        <ProductFormDialog
+          open={open}
+          onClose={handleClose}
+          form={form}
+          onChange={handleChange}
+          onImageChange={handleImageChange}
+          onSave={handleSave}
+          editingProduct={editingProduct}
+          imagePreview={imagePreview}
+          loading={loading}
+        />
 
-      {/* Alert Snackbar */}
-      <CustomAlert alertInfo={alertInfo} onClose={handleCloseAlert} />
+        {/* Alert Snackbar */}
+        <CustomAlert alertInfo={alertInfo} onClose={handleCloseAlert} />
+      </Box>
+
+      {/* Footer - will stay at the bottom */}
+      <Footer />
     </Box>
   );
 }
