@@ -8,12 +8,12 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 // Product page components
-import SearchFilterBar from "../components/products/SearchFilterBar";
-import ActiveFilters from "../components/products/ActiveFilters";
-import FilterDrawer from "../components/products/FilterDrawer";
-import ProductGrid from "../components/products/ProductGrid";
-import ProductDetailsDialog from "../components/products/ProductDetailsDialog";
-import { API_URL } from "../components/products/Constants";
+import SearchFilterBar from "../components/SearchFilterBar";
+import ActiveFilters from "../components/ActiveFilters";
+import FilterDrawer from "../components/FilterDrawer";
+import ProductGrid from "../components//ProductGrid";
+import ProductDetailsDialog from "../components/ProductDetailsDialog";
+import { API_URL } from "../components/Constants";
 
 export default function Products() {
   // States
