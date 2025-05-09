@@ -9,7 +9,12 @@ import {
   Typography,
   Grid,
   Box,
+  Divider,
   IconButton,
+  Paper,
+  Stack,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Close as CloseIcon,
@@ -28,172 +33,193 @@ function capitalizeSentences(text) {
 }
 
 function ProductDetailsDialog({ open, product, onClose }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
   if (!product) return null;
+  
+  const capitalizedName = product.name
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>
+    <Dialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth="md" 
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+          overflow: 'hidden',
+        }
+      }}
+      fullScreen={isMobile}
+    >
+      <DialogTitle sx={{ p: 2 }}>
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            py: 1,
           }}
         >
-          <Typography variant="h6">
-            {product.name
-              .split(" ")
-              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(" ")}
+          <Typography variant="h5" fontWeight={600}>
+            {capitalizedName}
           </Typography>
-          <IconButton onClick={onClose}>
+          <IconButton 
+            onClick={onClose}
+            sx={{
+              bgcolor: 'rgba(0,0,0,0.05)',
+              '&:hover': {
+                bgcolor: 'rgba(0,0,0,0.1)',
+              }
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
-      <DialogContent dividers>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <img
-              src={
-                product.image ||
-                "https://via.placeholder.com/600x400?text=No+Image"
-              }
-              alt={product.name
-                .split(" ")
-                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(" ")}
-              style={{ width: "100%", borderRadius: "8px" }}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src =
-                  "https://via.placeholder.com/600x400?text=No+Image";
-              }}
-            />
+      <DialogContent dividers sx={{ p: 0, pb: 0, bgcolor: '#f8f9fa' }}>
+        <Grid container>
+          <Grid item xs={12} md={6} sx={{ 
+            p: 0, 
+            position: 'relative',
+            bgcolor: '#000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            maxHeight: { xs: 'auto', md: '500px' },
+            overflow: 'hidden'
+          }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+              <img
+                src={
+                  product.image ||
+                  "https://via.placeholder.com/600x400?text=No+Image"
+                }
+                alt={capitalizedName}
+                style={{ 
+                  width: "100%", 
+                  height: "100%",
+                  objectFit: "contain",
+                  maxHeight: "500px"
+                }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src =
+                    "https://via.placeholder.com/600x400?text=No+Image";
+                }}
+              />
+            </Box>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h5" color="primary" gutterBottom>
-              Rs.{Number(product.price).toFixed(2)}
-            </Typography>
 
-            {/* Product description */}
+          <Grid item xs={12} md={6} sx={{ p: 3 }}>
+            {/* Price */}
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="h4" color="primary" fontWeight={700}>
+                Rs.{Number(product.price).toFixed(2)}
+              </Typography>
+            </Box>
+
+            {/* Description */}
+            <Typography variant="h6" gutterBottom fontWeight={600}>
+              Description
+            </Typography>
             <Typography variant="body1" paragraph>
               {product.description
                 ? capitalizeSentences(product.description)
                 : "No description available"}
             </Typography>
 
-            {/* Product specifications */}
+            {/* Specifications */}
             {(product.productType === "Spare Part" ||
               product.productType === "Accessory") && (
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="h6" gutterBottom>
+              <Box sx={{ my: 3 }}>
+                <Typography variant="h6" gutterBottom fontWeight={600}>
                   Specifications
                 </Typography>
-                <Grid container spacing={1}>
-                  <Grid item xs={4}>
-                    <Typography variant="body2" color="text.secondary">
-                      Product Type:
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Typography variant="body2">
-                      {product.productType}
-                    </Typography>
-                  </Grid>
+                <Paper elevation={0} sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(0,0,0,0.02)' }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={5}><Typography variant="body2" color="text.secondary">Product Type:</Typography></Grid>
+                    <Grid item xs={7}><Typography variant="body2" fontWeight={500}>{product.productType}</Typography></Grid>
 
-                  <Grid item xs={4}>
-                    <Typography variant="body2" color="text.secondary">
-                      Brand:
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Typography variant="body2">
-                      {product.brand || "N/A"}
-                    </Typography>
-                  </Grid>
+                    <Grid item xs={5}><Typography variant="body2" color="text.secondary">Brand:</Typography></Grid>
+                    <Grid item xs={7}><Typography variant="body2" fontWeight={500}>{product.brand || "N/A"}</Typography></Grid>
 
-                  <Grid item xs={4}>
-                    <Typography variant="body2" color="text.secondary">
-                      Part Type:
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Typography variant="body2">
-                      {product.partType || "N/A"}
-                    </Typography>
-                  </Grid>
+                    <Grid item xs={5}><Typography variant="body2" color="text.secondary">Part Type:</Typography></Grid>
+                    <Grid item xs={7}><Typography variant="body2" fontWeight={500}>{product.partType || "N/A"}</Typography></Grid>
 
-                  <Grid item xs={4}>
-                    <Typography variant="body2" color="text.secondary">
-                      Bike Model:
-                    </Typography>
+                    <Grid item xs={5}><Typography variant="body2" color="text.secondary">Bike Model:</Typography></Grid>
+                    <Grid item xs={7}><Typography variant="body2" fontWeight={500}>{product.bikeModel || "N/A"}</Typography></Grid>
                   </Grid>
-                  <Grid item xs={8}>
-                    <Typography variant="body2">{product.bikeModel}</Typography>
-                  </Grid>
-                </Grid>
+                </Paper>
               </Box>
             )}
 
-            {/* Seller information */}
-            <Box sx={{ mt: 3, p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}>
-              <Typography variant="h6" gutterBottom>
+            <Divider sx={{ my: 3 }} />
+
+            {/* Seller Info */}
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="h6" gutterBottom fontWeight={600}>
                 Seller Information
               </Typography>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                <PersonIcon sx={{ mr: 1, color: "text.secondary" }} />
-                <Typography variant="body1">
-                  {product.user
-                    ? `${product.user.fname
-                        .split(" ")
-                        .map(
-                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
-                        )
-                        .join(" ")} ${
-                        product.user.lname
+              
+              <Paper elevation={1} sx={{ p: 2, borderRadius: 2, bgcolor: 'white' }}>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                  <PersonIcon sx={{ mr: 1.5, color: "text.secondary", fontSize: 20 }} />
+                  <Typography variant="body1" fontWeight={600}>
+                    {product.user
+                      ? `${product.user.fname
                           .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() + word.slice(1)
-                          )
-                          .join(" ") || ""
-                      }`
-                    : "Unknown Seller"}
-                </Typography>
-              </Box>
+                          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                          .join(" ")} ${product.user.lname
+                            .split(" ")
+                            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                            .join(" ") || ""}`
+                      : "Unknown Seller"}
+                  </Typography>
+                </Box>
 
-              <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                <HomeIcon sx={{ mr: 1, color: "text.secondary" }} />
-                <Typography variant="body1">
-                  {product.user?.address
-                    .split(" ")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ") || "No contact information"}
-                </Typography>
-              </Box>
+                <Divider sx={{ my: 1.5 }} />
 
-              <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                <PhoneIcon sx={{ mr: 1, color: "text.secondary" }} />
-                <Typography variant="body1">
-                  {product.user?.pno || "No contact information"}
-                </Typography>
-              </Box>
+                <Stack spacing={1.5} sx={{ mt: 2 }}>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <HomeIcon sx={{ mr: 1.5, color: "text.secondary", fontSize: 20 }} />
+                    <Typography variant="body2">
+                      {product.user?.address
+                        ? product.user.address
+                            .split(" ")
+                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                            .join(" ")
+                        : "No address provided"}
+                    </Typography>
+                  </Box>
 
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <CalendarIcon sx={{ mr: 1, color: "text.secondary" }} />
-                <Typography variant="body1">
-                  Listed on: {formatDate(product.createdAt)}
-                </Typography>
-              </Box>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <PhoneIcon sx={{ mr: 1.5, color: "text.secondary", fontSize: 20 }} />
+                    <Typography variant="body2">
+                      {product.user?.pno || "No contact number provided"}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <CalendarIcon sx={{ mr: 1.5, color: "text.secondary", fontSize: 20 }} />
+                    <Typography variant="body2">
+                      Listed on: {formatDate(product.createdAt)}
+                    </Typography>
+                  </Box>
+                </Stack>
+              </Paper>
             </Box>
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Close</Button>
-        {/* You could add more action buttons here, like "Contact Seller" or "Buy Now" */}
+
+      <DialogActions sx={{ p: 2, bgcolor: '#f8f9fa' }}>
+        <Button onClick={onClose} sx={{ fontWeight: 500 }}>Close</Button>
       </DialogActions>
     </Dialog>
   );
