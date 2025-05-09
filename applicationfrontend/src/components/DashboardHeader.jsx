@@ -7,7 +7,7 @@ import {
   Box,
   Container,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";

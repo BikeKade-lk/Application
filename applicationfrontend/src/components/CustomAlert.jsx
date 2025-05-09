@@ -16,13 +16,13 @@ const CustomAlert = ({
   position = { vertical: "bottom", horizontal: "center" },
   duration = 6000,
   showCloseButton = true,
-  sx = {}
+  sx = {},
 }) => {
   const {
     open = false,
     severity = "info",
     message = "",
-    title = ""
+    title = "",
   } = alertInfo;
 
   return (

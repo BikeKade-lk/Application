@@ -53,25 +53,27 @@ const ProductFormDialog = ({
   loading,
 }) => {
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose} 
-      maxWidth="sm" 
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
       fullWidth
       PaperProps={{
         sx: {
           borderRadius: 2,
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
-        }
+          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
+        },
       }}
     >
-      <DialogTitle sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        borderBottom: '1px solid #e0e0e0',
-        pb: 1
-      }}>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderBottom: "1px solid #e0e0e0",
+          pb: 1,
+        }}
+      >
         <Typography variant="h6" fontWeight="600">
           {editingProduct ? "Edit Product" : "Add Product"}
         </Typography>
@@ -79,7 +81,7 @@ const ProductFormDialog = ({
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      
+
       <DialogContent sx={{ p: 3 }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
           {/* Product Type Selection */}
@@ -102,7 +104,12 @@ const ProductFormDialog = ({
           </FormControl>
 
           <Divider sx={{ my: 1 }} />
-          <Typography variant="subtitle1" fontWeight="600" color="primary" gutterBottom>
+          <Typography
+            variant="subtitle1"
+            fontWeight="600"
+            color="primary"
+            gutterBottom
+          >
             Product Information
           </Typography>
 
@@ -114,7 +121,7 @@ const ProductFormDialog = ({
                 margin="normal"
                 required
                 error={form.brand === ""}
-                sx={{ backgroundColor: '#fafafa', p: 1, borderRadius: 1 }}
+                sx={{ backgroundColor: "#fafafa", p: 1, borderRadius: 1 }}
               >
                 <InputLabel id="brand-label">Brand</InputLabel>
                 <Select
@@ -143,7 +150,7 @@ const ProductFormDialog = ({
                 margin="normal"
                 required
                 error={form.partType === ""}
-                sx={{ backgroundColor: '#fafafa', p: 1, borderRadius: 1 }}
+                sx={{ backgroundColor: "#fafafa", p: 1, borderRadius: 1 }}
               >
                 <InputLabel id="part-type-label">Part Type</InputLabel>
                 <Select
@@ -184,7 +191,7 @@ const ProductFormDialog = ({
                 inputProps={{
                   style: { textTransform: "uppercase" },
                 }}
-                sx={{ backgroundColor: '#fafafa', p: 1, borderRadius: 1 }}
+                sx={{ backgroundColor: "#fafafa", p: 1, borderRadius: 1 }}
               />
             </>
           )}
@@ -240,7 +247,12 @@ const ProductFormDialog = ({
           />
 
           <Divider sx={{ my: 1 }} />
-          <Typography variant="subtitle1" fontWeight="600" color="primary" gutterBottom>
+          <Typography
+            variant="subtitle1"
+            fontWeight="600"
+            color="primary"
+            gutterBottom
+          >
             Product Image
           </Typography>
 
@@ -268,14 +280,14 @@ const ProductFormDialog = ({
               Max file size: 1MB
             </Typography>
             {imagePreview ? (
-              <Box 
-                mt={2} 
-                sx={{ 
-                  border: '1px solid #e0e0e0', 
+              <Box
+                mt={2}
+                sx={{
+                  border: "1px solid #e0e0e0",
                   borderRadius: 1,
                   p: 1,
-                  display: 'flex',
-                  justifyContent: 'center'
+                  display: "flex",
+                  justifyContent: "center",
                 }}
               >
                 <img
@@ -293,16 +305,16 @@ const ProductFormDialog = ({
                 />
               </Box>
             ) : (
-              <Box 
-                sx={{ 
-                  mt: 2, 
-                  height: 120, 
-                  border: '1px dashed #c0c0c0', 
+              <Box
+                sx={{
+                  mt: 2,
+                  height: 120,
+                  border: "1px dashed #c0c0c0",
                   borderRadius: 1,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: '#f9f9f9'
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#f9f9f9",
                 }}
               >
                 <Typography variant="body2" color="text.secondary">
@@ -314,13 +326,13 @@ const ProductFormDialog = ({
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid #e0e0e0' }}>
+      <DialogActions sx={{ px: 3, py: 2, borderTop: "1px solid #e0e0e0" }}>
         <Button onClick={onClose} disabled={loading} sx={{ mr: 1 }}>
           Cancel
         </Button>
-        <Button 
-          onClick={onSave} 
-          variant="contained" 
+        <Button
+          onClick={onSave}
+          variant="contained"
           disabled={loading}
           sx={{ px: 3 }}
         >
