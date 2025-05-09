@@ -188,7 +188,7 @@ export default function Signup() {
           )}
 
           <form onSubmit={handleSubmit} noValidate>
-            <Grid container spacing={2}>
+            <Grid container spacing={5}>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
