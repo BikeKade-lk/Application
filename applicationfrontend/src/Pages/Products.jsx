@@ -1,54 +1,22 @@
+// src/Pages/Products.jsx
 import React, { useEffect, useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Button,
-  Box,
-  Grid,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActions,
-  TextField,
-  InputAdornment,
-  CircularProgress,
-  Snackbar,
-  Alert,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Divider,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Pagination,
-  Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Avatar,
-} from "@mui/material";
-import {
-  Search as SearchIcon,
-  FilterList as FilterIcon,
-  DirectionsBike as BikeIcon,
-  Menu as MenuIcon,
-  Person as PersonIcon,
-  Phone as PhoneIcon,
-  Home as HomeIcon,
-  CalendarToday as CalendarIcon,
-  Close as CloseIcon,
-} from "@mui/icons-material";
+import { Box, Typography, Snackbar, Alert } from "@mui/material";
 import axios from "axios";
 
+// Layout components
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
+// Product page components
+import SearchFilterBar from "../components/products/SearchFilterBar";
+import ActiveFilters from "../components/products/ActiveFilters";
+import FilterDrawer from "../components/products/FilterDrawer";
+import ProductGrid from "../components/products/ProductGrid";
+import ProductDetailsDialog from "../components/products/ProductDetailsDialog";
+import { API_URL } from "../components/products/Constants";
+
 export default function Products() {
-  // State for products and filtering
+  // States
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -68,63 +36,41 @@ export default function Products() {
   const [page, setPage] = useState(1);
   const [productsPerPage] = useState(12);
 
-  // New state for product details dialog
+  // Product details dialog
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Constants
-  const API_URL = "http://localhost:8080/product";
-  const BRANDS = ["Yamaha", "Honda", "Kawasaki", "Suzuki", "KTM", "Husqvarna"];
-  const PART_TYPES = [
-    "engine part",
-    "body part",
-    "electric part",
-    "suspension",
-    "brakes",
-    "drivetrain",
-    "wheels and tires",
-    "exhaust system",
-    "air intake",
-    "cooling system",
-    "fuel system",
-    "controls and handlebars",
-    "frame and chassis",
-    "lighting",
-    "protection accessories",
-  ];
-  const PRICE_RANGES = [
-    { label: "Any Price", value: "" },
-    { label: "Under Rs.5,000", value: "0-5000" },
-    { label: "Rs.5,000 - Rs.10,000", value: "5000-10000" },
-    { label: "Rs.10,000 - Rs.20,000", value: "10000-20000" },
-    { label: "Rs.20,000 - Rs.50,000", value: "20000-50000" },
-    { label: "Over Rs.50,000", value: "50000-999999" },
-  ];
-
-  // Functions
-  function showAlert(message, severity = "info") {
+  // Alert handlers
+  const showAlert = (message, severity = "info") => {
     setAlertInfo({ open: true, message, severity });
-  }
+  };
 
-  function handleCloseAlert() {
+  const handleCloseAlert = () => {
     setAlertInfo((prev) => ({ ...prev, open: false }));
-  }
+  };
 
-  function handleDrawerToggle() {
+  // UI event handlers
+  const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
-  }
+  };
 
-  function handleSearchChange(e) {
+  const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-  }
+    setPage(1);
+  };
 
-  function handleFilterChange(e) {
+  const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
-    setPage(1); // Reset to first page when filter changes
-  }
+    setPage(1);
+  };
 
-  function clearFilters() {
+  const handleRemoveFilter = (filterName) => {
+    setFilters((prev) => ({ ...prev, [filterName]: "" }));
+    setPage(1);
+  };
+
+  const clearFilters = () => {
     setFilters({
       productType: "",
       brand: "",
@@ -133,25 +79,25 @@ export default function Products() {
       priceRange: "",
     });
     setSearchQuery("");
-    setPage(1); // Reset to first page
-  }
+    setPage(1);
+  };
 
-  function handlePageChange(event, value) {
+  const handlePageChange = (event, value) => {
     setPage(value);
-    window.scrollTo(0, 0); // Scroll to top when page changes
-  }
+    window.scrollTo(0, 0);
+  };
 
-  // New functions for product details dialog
-  function openProductDetails(product) {
+  const openProductDetails = (product) => {
     setSelectedProduct(product);
     setDetailsDialogOpen(true);
-  }
+  };
 
-  function closeProductDetails() {
+  const closeProductDetails = () => {
     setDetailsDialogOpen(false);
-  }
+  };
 
-  async function fetchProducts() {
+  // Fetch products
+  const fetchProducts = async () => {
     setLoading(true);
     try {
       const response = await axios.get(`${API_URL}/getall`);
@@ -162,11 +108,11 @@ export default function Products() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  function filterProducts(products) {
+  // Apply filters
+  const filterProducts = (products) => {
     return products.filter((product) => {
-      // Search query filter
       if (
         searchQuery &&
         !product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -175,28 +121,18 @@ export default function Products() {
         return false;
       }
 
-      // Product type filter
       if (filters.productType && product.productType !== filters.productType) {
         return false;
       }
 
-      // Brand filter (only for spare parts)
-      if (
-        filters.brand &&
-        (!product.brand || product.brand !== filters.brand)
-      ) {
+      if (filters.brand && product.brand !== filters.brand) {
         return false;
       }
 
-      // Part type filter (only for spare parts)
-      if (
-        filters.partType &&
-        (!product.partType || product.partType !== filters.partType)
-      ) {
+      if (filters.partType && product.partType !== filters.partType) {
         return false;
       }
 
-      // Bike model filter (only for spare parts)
       if (
         filters.bikeModel &&
         (!product.bikeModel ||
@@ -205,7 +141,6 @@ export default function Products() {
         return false;
       }
 
-      // Price range filter
       if (filters.priceRange) {
         const [min, max] = filters.priceRange.split("-").map(Number);
         const price = Number(product.price);
@@ -216,588 +151,72 @@ export default function Products() {
 
       return true;
     });
-  }
+  };
 
-  // Helper function to format date
-  function formatDate(dateString) {
-    if (!dateString) return "N/A";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  }
-
-  // Effect to fetch products on component mount
+  // Load products on mount
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  // Filter and paginate products
   const filteredProducts = filterProducts(products);
   const paginatedProducts = filteredProducts.slice(
     (page - 1) * productsPerPage,
     page * productsPerPage
   );
 
-  const pageCount = Math.ceil(filteredProducts.length / productsPerPage);
-
-  // Create the filter drawer content
-  const filterDrawer = (
-    <Box sx={{ width: 250, p: 2 }} role="presentation">
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Filter Products
-      </Typography>
-      <Divider sx={{ mb: 2 }} />
-
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <FormControl fullWidth size="small">
-          <InputLabel id="product-type-label">Product Type</InputLabel>
-          <Select
-            labelId="product-type-label"
-            name="productType"
-            value={filters.productType}
-            label="Product Type"
-            onChange={handleFilterChange}
-          >
-            <MenuItem value="">All Types</MenuItem>
-            <MenuItem value="accessory">Accessory</MenuItem>
-            <MenuItem value="spare part">Spare Part</MenuItem>
-          </Select>
-        </FormControl>
-
-        <FormControl fullWidth size="small">
-          <InputLabel id="brand-label">Brand</InputLabel>
-          <Select
-            labelId="brand-label"
-            name="brand"
-            value={filters.brand}
-            label="Brand"
-            onChange={handleFilterChange}
-          >
-            <MenuItem value="">All Brands</MenuItem>
-            {BRANDS.map((brand) => (
-              <MenuItem key={brand} value={brand}>
-                {brand}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl fullWidth size="small">
-          <InputLabel id="part-type-label">Part Type</InputLabel>
-          <Select
-            labelId="part-type-label"
-            name="partType"
-            value={filters.partType}
-            label="Part Type"
-            onChange={handleFilterChange}
-          >
-            <MenuItem value="">All Part Types</MenuItem>
-            {PART_TYPES.map((partType) => (
-              <MenuItem key={partType} value={partType}>
-                {partType.charAt(0).toUpperCase() + partType.slice(1)}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <TextField
-          label="Bike Model"
-          name="bikeModel"
-          value={filters.bikeModel}
-          onChange={handleFilterChange}
-          fullWidth
-          size="small"
-        />
-
-        <FormControl fullWidth size="small">
-          <InputLabel id="price-range-label">Price Range</InputLabel>
-          <Select
-            labelId="price-range-label"
-            name="priceRange"
-            value={filters.priceRange}
-            label="Price Range"
-            onChange={handleFilterChange}
-          >
-            {PRICE_RANGES.map((range) => (
-              <MenuItem key={range.value} value={range.value}>
-                {range.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Button variant="outlined" onClick={clearFilters} sx={{ mt: 2 }}>
-          Clear Filters
-        </Button>
-      </Box>
-    </Box>
-  );
-
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      {/* App Bar - Simplified with only logo and name */}
-      <AppBar position="static">
-        <Toolbar>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}
-          >
-            <BikeIcon sx={{ mr: 1 }} /> BikeKade.lk
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Header />
 
-      {/* Drawer */}
-      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle}>
-        {filterDrawer}
-      </Drawer>
+      {/* Filter Drawer */}
+      <FilterDrawer
+        open={drawerOpen}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onClose={handleDrawerToggle}
+        onClearFilters={clearFilters}
+      />
 
       {/* Main Content */}
-      <Box sx={{ p: 2 }}>
-        {/* Search and Filter Bar */}
-        <Box sx={{ mb: 3, display: "flex", alignItems: "center", gap: 2 }}>
-          <TextField
-            variant="outlined"
-            placeholder="Search products..."
-            fullWidth
-            value={searchQuery}
-            onChange={handleSearchChange}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-            size="small"
-          />
+      <Box sx={{ flex: 1, p: 2 }}>
+        <SearchFilterBar
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
+          onFilterToggle={handleDrawerToggle}
+        />
 
-          <Button
-            variant="outlined"
-            startIcon={<FilterIcon />}
-            onClick={handleDrawerToggle}
-          >
-            Filters
-          </Button>
-        </Box>
+        <ActiveFilters filters={filters} onRemoveFilter={handleRemoveFilter} />
 
-        {/* Active Filters Display */}
-        {(filters.productType ||
-          filters.brand ||
-          filters.partType ||
-          filters.bikeModel ||
-          filters.priceRange) && (
-          <Box
-            sx={{ mb: 2, p: 1, bgcolor: "background.paper", borderRadius: 1 }}
-          >
-            <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Active Filters:
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-              {filters.productType && (
-                <Chip
-                  label={`Type: ${filters.productType}`}
-                  onDelete={() =>
-                    setFilters((prev) => ({ ...prev, productType: "" }))
-                  }
-                  size="small"
-                />
-              )}
-              {filters.brand && (
-                <Chip
-                  label={`Brand: ${filters.brand}`}
-                  onDelete={() =>
-                    setFilters((prev) => ({ ...prev, brand: "" }))
-                  }
-                  size="small"
-                />
-              )}
-              {filters.partType && (
-                <Chip
-                  label={`Part Type: ${filters.partType}`}
-                  onDelete={() =>
-                    setFilters((prev) => ({ ...prev, partType: "" }))
-                  }
-                  size="small"
-                />
-              )}
-              {filters.bikeModel && (
-                <Chip
-                  label={`Model: ${filters.bikeModel}`}
-                  onDelete={() =>
-                    setFilters((prev) => ({ ...prev, bikeModel: "" }))
-                  }
-                  size="small"
-                />
-              )}
-              {filters.priceRange && (
-                <Chip
-                  label={`Price: ${
-                    PRICE_RANGES.find((r) => r.value === filters.priceRange)
-                      ?.label
-                  }`}
-                  onDelete={() =>
-                    setFilters((prev) => ({ ...prev, priceRange: "" }))
-                  }
-                  size="small"
-                />
-              )}
-            </Box>
-          </Box>
-        )}
-
-        {/* Results Count */}
         <Typography variant="subtitle1" sx={{ mb: 2 }}>
           {filteredProducts.length} products found
         </Typography>
 
-        {/* Loading Spinner */}
-        {loading && (
-          <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
-            <CircularProgress />
-          </Box>
-        )}
-
-        {/* Product Grid */}
-        {!loading && filteredProducts.length === 0 ? (
-          <Box sx={{ textAlign: "center", my: 4 }}>
-            <Typography variant="h6">
-              No products match your search criteria
-            </Typography>
-            <Button variant="contained" onClick={clearFilters} sx={{ mt: 2 }}>
-              Clear Filters
-            </Button>
-          </Box>
-        ) : (
-          <Grid container spacing={3}>
-            {paginatedProducts.map((product) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="160"
-                    image={
-                      product.image ||
-                      "https://via.placeholder.com/300x160?text=No+Image"
-                    }
-                    alt={product.name}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://via.placeholder.com/300x160?text=No+Image";
-                    }}
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6" component="div">
-                      {product.name}
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <Typography
-                        variant="subtitle1"
-                        color="primary"
-                        sx={{ fontWeight: "bold" }}
-                      >
-                        Rs.{Number(product.price).toFixed(2)}
-                      </Typography>
-                      {product.productType === "spare part" && (
-                        <Chip
-                          label={product.productType}
-                          size="small"
-                          color="secondary"
-                          sx={{ ml: 1 }}
-                        />
-                      )}
-                      {product.productType === "accessory" && (
-                        <Chip
-                          label={product.productType}
-                          size="small"
-                          color="secondary"
-                          sx={{ ml: 1 }}
-                        />
-                      )}
-                    </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      {product.description?.length > 60
-                        ? product.description.substring(0, 60) + "..."
-                        : product.description || "No description available"}
-                    </Typography>
-
-                    {product.productType === "spare part" && (
-                      <Box sx={{ mt: 1 }}>
-                        {product.brand && (
-                          <Typography variant="body2">
-                            <strong>Brand:</strong> {product.brand}
-                          </Typography>
-                        )}
-                        {product.partType && (
-                          <Typography variant="body2">
-                            <strong>Type:</strong> {product.partType}
-                          </Typography>
-                        )}
-                        {product.bikeModel && (
-                          <Typography variant="body2">
-                            <strong>Fits:</strong> {product.bikeModel}
-                          </Typography>
-                        )}
-                      </Box>
-                    )}
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      fullWidth
-                      onClick={() => openProductDetails(product)}
-                    >
-                      View Details
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        )}
-
-        {/* Pagination */}
-        {filteredProducts.length > 0 && (
-          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-            <Pagination
-              count={pageCount}
-              page={page}
-              onChange={handlePageChange}
-              color="primary"
-              showFirstButton
-              showLastButton
-            />
-          </Box>
-        )}
+        <ProductGrid
+          loading={loading}
+          filteredProducts={filteredProducts}
+          paginatedProducts={paginatedProducts}
+          page={page}
+          productsPerPage={productsPerPage}
+          onPageChange={handlePageChange}
+          onClearFilters={clearFilters}
+          onViewDetails={openProductDetails}
+        />
       </Box>
 
+      <Footer />
+
       {/* Product Details Dialog */}
-      <Dialog
+      <ProductDetailsDialog
         open={detailsDialogOpen}
+        product={selectedProduct}
         onClose={closeProductDetails}
-        maxWidth="md"
-        fullWidth
-      >
-        {selectedProduct && (
-          <>
-            <DialogTitle>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Typography variant="h6">{selectedProduct.name}</Typography>
-                <IconButton onClick={closeProductDetails}>
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-            </DialogTitle>
-            <DialogContent dividers>
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <img
-                    src={
-                      selectedProduct.image ||
-                      "https://via.placeholder.com/600x400?text=No+Image"
-                    }
-                    alt={selectedProduct.name}
-                    style={{ width: "100%", borderRadius: "8px" }}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src =
-                        "https://via.placeholder.com/600x400?text=No+Image";
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h5" color="primary" gutterBottom>
-                    Rs.{Number(selectedProduct.price).toFixed(2)}
-                  </Typography>
+      />
 
-                  {/* Product description */}
-                  <Typography variant="body1" paragraph>
-                    {selectedProduct.description || "No description available"}
-                  </Typography>
-
-                  {/* Product specifications */}
-                  {selectedProduct.productType === "spare part" && (
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="h6" gutterBottom>
-                        Specifications
-                      </Typography>
-                      <Grid container spacing={1}>
-                        <Grid item xs={4}>
-                          <Typography variant="body2" color="text.secondary">
-                            Product Type:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={8}>
-                          <Typography variant="body2">
-                            {selectedProduct.productType}
-                          </Typography>
-                        </Grid>
-
-                        <Grid item xs={4}>
-                          <Typography variant="body2" color="text.secondary">
-                            Brand:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={8}>
-                          <Typography variant="body2">
-                            {selectedProduct.brand || "N/A"}
-                          </Typography>
-                        </Grid>
-
-                        <Grid item xs={4}>
-                          <Typography variant="body2" color="text.secondary">
-                            Part Type:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={8}>
-                          <Typography variant="body2">
-                            {selectedProduct.partType || "N/A"}
-                          </Typography>
-                        </Grid>
-
-                        <Grid item xs={4}>
-                          <Typography variant="body2" color="text.secondary">
-                            Bike Model:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={8}>
-                          <Typography variant="body2">
-                            {selectedProduct.bikeModel || "N/A"}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  )}
-
-                  {selectedProduct.productType === "accessory" && (
-                    <Box sx={{ mb: 3 }}>
-                      <Typography variant="h6" gutterBottom>
-                        Specifications
-                      </Typography>
-                      <Grid container spacing={1}>
-                        <Grid item xs={4}>
-                          <Typography variant="body2" color="text.secondary">
-                            Product Type:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={8}>
-                          <Typography variant="body2">
-                            {selectedProduct.productType}
-                          </Typography>
-                        </Grid>
-
-                        <Grid item xs={4}>
-                          <Typography variant="body2" color="text.secondary">
-                            Brand:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={8}>
-                          <Typography variant="body2">
-                            {selectedProduct.brand || "N/A"}
-                          </Typography>
-                        </Grid>
-
-                        <Grid item xs={4}>
-                          <Typography variant="body2" color="text.secondary">
-                            Part Type:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={8}>
-                          <Typography variant="body2">
-                            {selectedProduct.partType || "N/A"}
-                          </Typography>
-                        </Grid>
-
-                        <Grid item xs={4}>
-                          <Typography variant="body2" color="text.secondary">
-                            Bike Model:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={8}>
-                          <Typography variant="body2">
-                            {selectedProduct.bikeModel || "N/A"}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  )}
-
-                  {/* Seller information */}
-                  <Box
-                    sx={{ mt: 3, p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}
-                  >
-                    <Typography variant="h6" gutterBottom>
-                      Seller Information
-                    </Typography>
-
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <PersonIcon sx={{ mr: 1, color: "text.secondary" }} />
-                      <Typography variant="body1">
-                        {selectedProduct.user
-                          ? `${selectedProduct.user.fname} ${
-                              selectedProduct.user.lname || ""
-                            }`
-                          : "Unknown Seller"}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <HomeIcon sx={{ mr: 1, color: "text.secondary" }} />
-                      <Typography variant="body1">
-                        {selectedProduct.user?.address ||
-                          "No contact information"}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <PhoneIcon sx={{ mr: 1, color: "text.secondary" }} />
-                      <Typography variant="body1">
-                        {selectedProduct.user?.pno || "No contact information"}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <CalendarIcon sx={{ mr: 1, color: "text.secondary" }} />
-                      <Typography variant="body1">
-                        Listed on: {formatDate(selectedProduct.createdAt)}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
-              </Grid>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={closeProductDetails}>Close</Button>
-              {/* You could add more action buttons here, like "Contact Seller" or "Buy Now" */}
-            </DialogActions>
-          </>
-        )}
-      </Dialog>
-
-      {/* Alert Snackbar */}
+      {/* Snackbar Alert */}
       <Snackbar
         open={alertInfo.open}
-        autoHideDuration={4000}
+        autoHideDuration={6000}
         onClose={handleCloseAlert}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <Alert
           onClose={handleCloseAlert}
