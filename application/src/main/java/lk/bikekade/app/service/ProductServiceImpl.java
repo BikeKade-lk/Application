@@ -222,4 +222,16 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteAll(oldProducts);
         System.out.println("Deleted products older than 30 days.");
     }
+
+	@Override
+	public Optional<User> getUserByUsername(String username) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
+
+	@Override
+	public User saveUser(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
