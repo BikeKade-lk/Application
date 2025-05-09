@@ -32,6 +32,8 @@ function capitalizeSentences(text) {
     .join(" ");
 }
 
+// ...imports remain the same
+
 function ProductDetailsDialog({ open, product, onClose }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
