@@ -7,10 +7,8 @@ import {
   Paper,
   Divider,
 } from "@mui/material";
-import {
-  AdminPanelSettings as AdminIcon,
-  Person as UserIcon,
-} from "@mui/icons-material";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import StoreRoundedIcon from "@mui/icons-material/StoreRounded";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Header from "../components/Header";
@@ -73,12 +71,11 @@ export default function Home() {
             </Typography>
           </Box>
           <Typography variant="h6" sx={{ mb: 3 }}>
-            Your one-stop shop for motorcycle accessories and spare parts
+            Your one-stop shop for dirt bike accessories and spare parts
           </Typography>
           <Divider sx={{ mb: 3 }} />
           <Typography variant="body1" sx={{ mb: 3 }}>
-            Find the perfect parts for your ride or manage your product
-            inventory.
+            Find the perfect parts for your ride.
           </Typography>
 
           {/* Dashboard Navigation Buttons */}
@@ -93,7 +90,7 @@ export default function Home() {
             <Button
               variant="contained"
               size="large"
-              startIcon={<UserIcon />}
+              startIcon={<SearchRoundedIcon />}
               onClick={() => navigate("/products")}
               sx={{
                 py: 1.5,
@@ -102,13 +99,13 @@ export default function Home() {
                 fontSize: "1.1rem",
               }}
             >
-              Shop Products
+              Find a Product
             </Button>
 
             <Button
               variant="outlined"
               size="large"
-              startIcon={<AdminIcon />}
+              startIcon={<StoreRoundedIcon />}
               onClick={() => navigate("/signup")}
               sx={{
                 py: 1.5,
@@ -117,7 +114,7 @@ export default function Home() {
                 fontSize: "1.1rem",
               }}
             >
-              Admin Dashboard
+              Sell a Product
             </Button>
           </Box>
         </Paper>
@@ -137,7 +134,7 @@ export default function Home() {
               Wide Selection
             </Typography>
             <Typography variant="body2">
-              Browse our extensive catalog of motorcycle parts and accessories
+              Browse our extensive catalog of dirt bike parts and accessories
               for all major brands.
             </Typography>
           </Paper>
@@ -147,7 +144,7 @@ export default function Home() {
               Quality Products
             </Typography>
             <Typography variant="body2">
-              We source only the best parts to ensure performance, durability,
+              We source only the best parts to ensure performance, durability
               and safety.
             </Typography>
           </Paper>
@@ -157,7 +154,7 @@ export default function Home() {
               Expert Support
             </Typography>
             <Typography variant="body2">
-              Our team of motorcycle enthusiasts is here to help you find the
+              Our team of dirt bike enthusiasts is here to help you find the
               right parts.
             </Typography>
           </Paper>

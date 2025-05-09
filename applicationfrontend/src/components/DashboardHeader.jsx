@@ -1,5 +1,7 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
 
 const DashboardHeader = ({ user, onAddProduct, onLogout }) => {
   return (
@@ -13,10 +15,18 @@ const DashboardHeader = ({ user, onAddProduct, onLogout }) => {
           's Dashboard
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Button color="inherit" onClick={onAddProduct}>
+          <Button
+            color="inherit"
+            onClick={onAddProduct}
+            startIcon={<AddRoundedIcon />}
+          >
             Add Product
           </Button>
-          <Button color="inherit" onClick={onLogout}>
+          <Button
+            color="inherit"
+            onClick={onLogout}
+            startIcon={<ExitToAppRoundedIcon />}
+          >
             Logout
           </Button>
         </Box>

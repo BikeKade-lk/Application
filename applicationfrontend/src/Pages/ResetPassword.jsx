@@ -93,7 +93,7 @@ export default function ResetPassword() {
       <Header />
       <Container maxWidth="sm" sx={{ py: 6 }}>
         <Box mt={4} p={3} sx={{ boxShadow: 2, borderRadius: 2 }}>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h4" align="center" gutterBottom>
             Reset Password
           </Typography>
 
@@ -116,7 +116,7 @@ export default function ResetPassword() {
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              label="Username or Email"
+              label="Username"
               name="identifier"
               value={formData.identifier}
               onChange={handleChange}

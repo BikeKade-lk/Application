@@ -64,7 +64,7 @@ export default function Signin() {
       >
         <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
           <Typography variant="h4" align="center" gutterBottom>
-            Login
+            Sign In
           </Typography>
 
           {error && (
@@ -116,7 +116,6 @@ export default function Signin() {
                 color: "primary.main",
                 textAlign: "center",
                 cursor: "pointer",
-                textDecoration: "underline",
               }}
             >
               Forgot your password? Reset here

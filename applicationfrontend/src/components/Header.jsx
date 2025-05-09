@@ -1,6 +1,7 @@
 // src/components/Header.js
 import React from "react";
 import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 
@@ -21,7 +22,12 @@ export default function Header() {
         </Box>
 
         {/* Right side: Home Button */}
-        <Button color="inherit" component={Link} to="/">
+        <Button
+          color="inherit"
+          component={Link}
+          to="/"
+          startIcon={<HomeRoundedIcon />}
+        >
           Home
         </Button>
       </Toolbar>

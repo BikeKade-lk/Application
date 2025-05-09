@@ -19,7 +19,7 @@ export default function Footer() {
           © {new Date().getFullYear()} BikeKade.lk - All Rights Reserved
         </Typography>
         <Typography variant="body2" align="center" sx={{ mt: 1 }}>
-          The ultimate destination for motorcycle enthusiasts
+          The ultimate destination for dirt bike enthusiasts
         </Typography>
       </Container>
     </Box>

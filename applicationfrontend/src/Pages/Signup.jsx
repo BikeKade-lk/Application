@@ -260,11 +260,10 @@ export default function Signup() {
                 mt: 2,
                 cursor: "pointer",
                 color: "primary.main",
-                textDecoration: "underline",
               }}
               onClick={() => navigate("/signin")}
             >
-              Do you have an account? Login
+              Do you have an account? Sign In
             </Typography>
           </form>
         </Paper>
