@@ -6,9 +6,19 @@ import {
   Container,
   Paper,
   Divider,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  useTheme,
+  useMediaQuery,
+  alpha,
 } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import StoreRoundedIcon from "@mui/icons-material/StoreRounded";
+import SpeedIcon from "@mui/icons-material/Speed";
+import BuildIcon from "@mui/icons-material/Build";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Header from "../components/Header";
@@ -16,34 +26,40 @@ import Footer from "../components/Footer";
 
 export default function Home() {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
-      <Container
-        component="main"
+      <Box
         sx={{
-          flexGrow: 1,
+          backgroundImage: "url('/hero-background.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          position: "relative",
+          height: "70vh",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
-          py: 4,
+          "&:before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: alpha(theme.palette.primary.dark, 0.7),
+            zIndex: 1,
+          },
         }}
       >
-        {/* Hero Section */}
-        <Paper
-          elevation={3}
+        <Container
+          maxWidth="lg"
           sx={{
-            p: 4,
-            mb: 4,
+            position: "relative",
+            zIndex: 2,
             textAlign: "center",
-            backgroundImage:
-              'linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("/bike-background.jpg")',
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            width: "100%",
-            maxWidth: 800,
+            color: "white",
           }}
         >
           <Box
@@ -51,115 +67,361 @@ export default function Home() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              mb: 2,
+              mb: 4,
             }}
           >
             <img
               src={logo}
               alt="BikeKade.lk Logo"
-              style={{ height: "120px", marginBottom: "16px" }}
+              style={{ height: "150px", marginBottom: "24px" }}
             />
             <Typography
-              variant="h3"
+              variant="h2"
               component="h1"
               sx={{
-                fontWeight: "bold",
-                color: "primary.main",
+                fontWeight: 800,
+                mb: 2,
+                textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+                letterSpacing: "1px",
               }}
             >
-              Welcome to BikeKade.lk
+              BIKEKADE.LK
             </Typography>
-          </Box>
-          <Typography variant="h6" sx={{ mb: 3 }}>
-            Your one-stop shop for dirt bike accessories and spare parts
-          </Typography>
-          <Divider sx={{ mb: 3 }} />
-          <Typography variant="body1" sx={{ mb: 3 }}>
-            Find the perfect parts for your ride.
-          </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: 4,
+                maxWidth: "800px",
+                mx: "auto",
+                fontWeight: 400,
+              }}
+            >
+              The Ultimate Destination for Dirt Bike Enthusiasts
+            </Typography>
+            <Divider
+              sx={{
+                width: "100px",
+                mb: 4,
+                borderColor: theme.palette.secondary.main,
+                borderBottomWidth: 3,
+              }}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 3,
+                flexWrap: "wrap",
+              }}
+            >
+              <Button
+                variant="contained"
+                size="large"
+                color="secondary"
+                startIcon={<SearchRoundedIcon />}
+                onClick={() => navigate("/products")}
+                sx={{
+                  py: 1.5,
+                  px: 4,
+                  borderRadius: 2,
+                  fontSize: "1.1rem",
+                  fontWeight: "bold",
+                  boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                  "&:hover": {
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 6px 12px rgba(0,0,0,0.3)",
+                  },
+                  transition: "all 0.3s ease",
+                }}
+              >
+                Browse Products
+              </Button>
 
-          {/* Dashboard Navigation Buttons */}
-          <Box
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<StoreRoundedIcon />}
+                onClick={() => navigate("/signup")}
+                sx={{
+                  py: 1.5,
+                  px: 4,
+                  borderRadius: 2,
+                  fontSize: "1.1rem",
+                  fontWeight: "bold",
+                  borderColor: "white",
+                  color: "white",
+                  borderWidth: 2,
+                  "&:hover": {
+                    borderColor: theme.palette.secondary.light,
+                    backgroundColor: alpha(theme.palette.secondary.light, 0.1),
+                    transform: "translateY(-2px)",
+                  },
+                  transition: "all 0.3s ease",
+                }}
+              >
+                Sell Your Parts
+              </Button>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Features Section */}
+      <Container
+        maxWidth="lg"
+        sx={{
+          py: 8,
+        }}
+      >
+        <Typography
+          variant="h4"
+          component="h2"
+          align="center"
+          sx={{ mb: 1, fontWeight: 700 }}
+        >
+          Why Choose BikeKade?
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          align="center"
+          color="text.secondary"
+          sx={{ mb: 6 }}
+        >
+          The premier marketplace for all your dirt bike needs
+        </Typography>
+
+<Container>
+      <Box 
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 4,
+          justifyContent: 'space-between',
+          alignItems: 'stretch',
+          width: '100%'
+        }}
+      >
+        {/* Wide Selection Card */}
+        <Card
+          elevation={3}
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+            "&:hover": {
+              transform: "translateY(-8px)",
+              boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
+            },
+            borderRadius: 2,
+            overflow: "hidden",
+          }}
+        >
+          <CardMedia
+            component="div"
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 4,
-              flexWrap: "wrap",
+              pt: "56.25%", // 16:9 aspect ratio
+              position: "relative",
+              backgroundColor: theme.palette.primary.light,
             }}
           >
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<SearchRoundedIcon />}
-              onClick={() => navigate("/products")}
+            <Box
               sx={{
-                py: 1.5,
-                px: 3,
-                borderRadius: 2,
-                fontSize: "1.1rem",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                color: "white",
               }}
             >
-              Find a Product
-            </Button>
+              <SpeedIcon sx={{ fontSize: 60 }} />
+            </Box>
+          </CardMedia>
+          <CardContent sx={{ flexGrow: 1, p: 3 }}>
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="h3"
+              sx={{ fontWeight: 600 }}
+            >
+              Wide Selection
+            </Typography>
+            <Typography variant="body1">
+              Browse our extensive catalog of dirt bike parts and
+              accessories for all major brands. We offer everything from
+              engines to smallest bolts, all in one place.
+            </Typography>
+          </CardContent>
+        </Card>
 
+        {/* Quality Products Card */}
+        <Card
+          elevation={3}
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+            "&:hover": {
+              transform: "translateY(-8px)",
+              boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
+            },
+            borderRadius: 2,
+            overflow: "hidden",
+          }}
+        >
+          <CardMedia
+            component="div"
+            sx={{
+              pt: "56.25%", // 16:9 aspect ratio
+              position: "relative",
+              backgroundColor: theme.palette.secondary.light,
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                color: "white",
+              }}
+            >
+              <BuildIcon sx={{ fontSize: 60 }} />
+            </Box>
+          </CardMedia>
+          <CardContent sx={{ flexGrow: 1, p: 3 }}>
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="h3"
+              sx={{ fontWeight: 600 }}
+            >
+              Quality Products
+            </Typography>
+            <Typography variant="body1">
+              We source only the best parts to ensure performance,
+              durability and safety. Every product on our platform meets
+              strict quality standards.
+            </Typography>
+          </CardContent>
+        </Card>
+
+        {/* Expert Support Card */}
+        <Card
+          elevation={3}
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+            "&:hover": {
+              transform: "translateY(-8px)",
+              boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
+            },
+            borderRadius: 2,
+            overflow: "hidden",
+          }}
+        >
+          <CardMedia
+            component="div"
+            sx={{
+              pt: "56.25%", // 16:9 aspect ratio
+              position: "relative",
+              backgroundColor: theme.palette.error.light,
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                color: "white",
+              }}
+            >
+              <SupportAgentIcon sx={{ fontSize: 60 }} />
+            </Box>
+          </CardMedia>
+          <CardContent sx={{ flexGrow: 1, p: 3 }}>
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="h3"
+              sx={{ fontWeight: 600 }}
+            >
+              Expert Support
+            </Typography>
+            <Typography variant="body1">
+              Our team of dirt bike enthusiasts is here to help you find the
+              right parts. Get personalized recommendations from people who
+              share your passion.
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
+    </Container>
+        
+      </Container>
+
+      {/* Call to Action */}
+      <Box
+        sx={{
+          bgcolor: theme.palette.grey[100],
+          py: 8,
+        }}
+      >
+        <Container maxWidth="md">
+          <Paper
+            elevation={6}
+            sx={{
+              p: { xs: 3, md: 6 },
+              textAlign: "center",
+              borderRadius: 4,
+              background: `linear-gradient(135deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
+              color: "white",
+            }}
+          >
+            <Typography
+              variant="h4"
+              component="h2"
+              sx={{ mb: 3, fontWeight: 700 }}
+            >
+              Ready to Find Your Perfect Part?
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ mb: 4, maxWidth: "600px", mx: "auto" }}
+            >
+              Join thousands of satisfied riders who found exactly what they
+              needed on BikeKade.lk. Sign up today and become part of Sri
+              Lanka's largest dirt bike community.
+            </Typography>
             <Button
-              variant="outlined"
+              variant="contained"
+              color="secondary"
               size="large"
-              startIcon={<StoreRoundedIcon />}
               onClick={() => navigate("/signup")}
               sx={{
                 py: 1.5,
-                px: 3,
+                px: 5,
                 borderRadius: 2,
                 fontSize: "1.1rem",
+                fontWeight: "bold",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                "&:hover": {
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 6px 12px rgba(0,0,0,0.3)",
+                },
+                transition: "all 0.3s ease",
               }}
             >
-              Sell a Product
+              Join Now
             </Button>
-          </Box>
-        </Paper>
-
-        {/* Features Section */}
-        <Box
-          sx={{
-            mt: 4,
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 3,
-            justifyContent: "center",
-          }}
-        >
-          <Paper elevation={2} sx={{ p: 3, width: 240 }}>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              Wide Selection
-            </Typography>
-            <Typography variant="body2">
-              Browse our extensive catalog of dirt bike parts and accessories
-              for all major brands.
-            </Typography>
           </Paper>
+        </Container>
+      </Box>
 
-          <Paper elevation={2} sx={{ p: 3, width: 240 }}>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              Quality Products
-            </Typography>
-            <Typography variant="body2">
-              We source only the best parts to ensure performance, durability
-              and safety.
-            </Typography>
-          </Paper>
-
-          <Paper elevation={2} sx={{ p: 3, width: 240 }}>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              Expert Support
-            </Typography>
-            <Typography variant="body2">
-              Our team of dirt bike enthusiasts is here to help you find the
-              right parts.
-            </Typography>
-          </Paper>
-        </Box>
-      </Container>
       <Footer />
     </Box>
   );
