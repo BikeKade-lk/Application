@@ -1,49 +1,85 @@
-// src/components/products/ProductDetailsDialog.jsx
 import React from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Typography,
-  Grid,
-  Box,
-  Divider,
-  IconButton,
-  Paper,
-  Stack,
-  useTheme,
-  useMediaQuery,
+import { 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogActions, 
+  IconButton, 
+  Typography, 
+  Box, 
+  Grid, 
+  Divider, 
+  Button, 
+  Paper, 
+  Card, 
+  CardMedia, 
+  CardContent, 
+  Chip, 
+  List, 
+  ListItem, 
+  ListItemIcon, 
+  ListItemText
 } from "@mui/material";
-import {
-  Close as CloseIcon,
-  Person as PersonIcon,
-  Phone as PhoneIcon,
-  Home as HomeIcon,
-  CalendarToday as CalendarIcon,
-} from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
+import PhoneIcon from "@mui/icons-material/Phone";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import InfoIcon from "@mui/icons-material/Info";
+import DescriptionIcon from "@mui/icons-material/Description";
+import PersonIcon from "@mui/icons-material/Person";
 import { formatDate } from "./Constants";
 
 function capitalizeSentences(text) {
   return text
-    .split(/(?<=[.!?])\s+/) // Split on sentence-ending punctuation
+    .split(/(?<=[.!?])\s+/)
     .map((sentence) => sentence.charAt(0).toUpperCase() + sentence.slice(1))
     .join(" ");
 }
 
-// ...imports remain the same
-
 function ProductDetailsDialog({ open, product, onClose }) {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
   if (!product) return null;
-  
+
   const capitalizedName = product.name
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+
+  const fullName = product.user
+    ? `${product.user.fname
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")} ${product.user.lname
+          .split(" ")
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")}`
+    : "Unknown Seller";
+
+  const address = product.user?.address
+    ? product.user.address
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+    : "No address provided";
+
+  const phone = product.user?.pno || "No contact number provided";
+  const listedDate = formatDate(product.createdAt);
+
+  const hasSpecs =
+    product.productType === "Spare Part" ||
+    product.productType === "Accessory";
+
+  const specs = {
+    productType: product.productType,
+    brand: product.brand || "N/A",
+    partType: product.partType || "N/A",
+    bikeModel: product.bikeModel || "N/A",
+  };
+
+  const imageUrl = product.image || "https://via.placeholder.com/600x400?text=No+Image";
+  const price = Number(product.price).toFixed(2);
+  const description = product.description
+    ? capitalizeSentences(product.description)
+    : "No description available";
 
   return (
     <Dialog 
@@ -51,177 +87,170 @@ function ProductDetailsDialog({ open, product, onClose }) {
       onClose={onClose} 
       maxWidth="md" 
       fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: 3,
-          overflow: 'hidden',
-        }
-      }}
-      fullScreen={isMobile}
+      aria-labelledby="product-details-dialog-title"
     >
-      <DialogTitle sx={{ p: 2 }}>
-        <Box
+      <DialogTitle id="product-details-dialog-title" sx={{ m: 0, p: 2 }}>
+        {capitalizedName}
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            py: 1,
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
           }}
         >
-          <Typography variant="h5" fontWeight={600}>
-            {capitalizedName}
-          </Typography>
-          <IconButton 
-            onClick={onClose}
-            sx={{
-              bgcolor: 'rgba(0,0,0,0.05)',
-              '&:hover': {
-                bgcolor: 'rgba(0,0,0,0.1)',
-              }
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </Box>
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
-      <DialogContent dividers sx={{ p: 0, pb: 0, bgcolor: '#f8f9fa' }}>
-        <Grid container>
-          <Grid item xs={12} md={6} sx={{ 
-            p: 0, 
-            position: 'relative',
-            bgcolor: '#000',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            maxHeight: { xs: 'auto', md: '500px' },
-            overflow: 'hidden'
-          }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-              <img
-                src={
-                  product.image ||
-                  "https://via.placeholder.com/600x400?text=No+Image"
-                }
+      
+      <DialogContent dividers>
+        <Grid container spacing={3}>
+          {/* Product Image */}
+          <Grid item xs={12} md={6}>
+            <Card elevation={0}>
+              <CardMedia
+                component="img"
+                height="300"
+                image={imageUrl}
                 alt={capitalizedName}
-                style={{ 
-                  width: "100%", 
-                  height: "100%",
+                sx={{ 
                   objectFit: "contain",
-                  maxHeight: "500px"
+                  bgcolor: "grey.100",
+                  borderRadius: 1
                 }}
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src =
-                    "https://via.placeholder.com/600x400?text=No+Image";
+                  e.target.src = "https://via.placeholder.com/600x400?text=No+Image";
                 }}
               />
-            </Box>
+            </Card>
           </Grid>
-
-          <Grid item xs={12} md={6} sx={{ p: 3 }}>
-            {/* Price */}
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="h4" color="primary" fontWeight={700}>
-                Rs.{Number(product.price).toFixed(2)}
+          
+          {/* Product Details */}
+          <Grid item xs={12} md={6}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+              <Box>
+                <Typography variant="h6" component="h2" gutterBottom>{capitalizedName}</Typography>
+                <Chip 
+                  label={product.productType} 
+                  size="small" 
+                  color="primary" 
+                  variant="outlined" 
+                  sx={{ mb: 1 }}
+                />
+              </Box>
+              <Typography variant="h6" color="primary" fontWeight="bold">
+                Rs. {price}
               </Typography>
             </Box>
-
-            {/* Description */}
-            <Typography variant="h6" gutterBottom fontWeight={600}>
-              Description
-            </Typography>
-            <Typography variant="body1" paragraph>
-              {product.description
-                ? capitalizeSentences(product.description)
-                : "No description available"}
-            </Typography>
-
-            {/* Specifications */}
-            {(product.productType === "Spare Part" ||
-              product.productType === "Accessory") && (
-              <Box sx={{ my: 3 }}>
-                <Typography variant="h6" gutterBottom fontWeight={600}>
-                  Specifications
+            
+            <Box sx={{ mb: 3 }}>
+              <Typography 
+                variant="subtitle1" 
+                fontWeight="medium" 
+                color="primary" 
+                gutterBottom
+                sx={{ display: 'flex', alignItems: 'center' }}
+              >
+                <DescriptionIcon fontSize="small" sx={{ mr: 0.5 }} />
+                DESCRIPTION
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {description}
+              </Typography>
+            </Box>
+            
+            {hasSpecs && (
+              <Box sx={{ mb: 3 }}>
+                <Typography 
+                  variant="subtitle1" 
+                  fontWeight="medium"
+                  color="primary"
+                  gutterBottom
+                  sx={{ display: 'flex', alignItems: 'center' }}
+                >
+                  <InfoIcon fontSize="small" sx={{ mr: 0.5 }} />
+                  SPECIFICATIONS
                 </Typography>
-                <Paper elevation={0} sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(0,0,0,0.02)' }}>
+                <Paper variant="outlined" sx={{ p: 2 }}>
                   <Grid container spacing={2}>
-                    <Grid item xs={5}><Typography variant="body2" color="text.secondary">Product Type:</Typography></Grid>
-                    <Grid item xs={7}><Typography variant="body2" fontWeight={500}>{product.productType}</Typography></Grid>
-
-                    <Grid item xs={5}><Typography variant="body2" color="text.secondary">Brand:</Typography></Grid>
-                    <Grid item xs={7}><Typography variant="body2" fontWeight={500}>{product.brand || "N/A"}</Typography></Grid>
-
-                    <Grid item xs={5}><Typography variant="body2" color="text.secondary">Part Type:</Typography></Grid>
-                    <Grid item xs={7}><Typography variant="body2" fontWeight={500}>{product.partType || "N/A"}</Typography></Grid>
-
-                    <Grid item xs={5}><Typography variant="body2" color="text.secondary">Bike Model:</Typography></Grid>
-                    <Grid item xs={7}><Typography variant="body2" fontWeight={500}>{product.bikeModel || "N/A"}</Typography></Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" color="text.secondary">Product Type</Typography>
+                      <Typography variant="body2">{specs.productType}</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" color="text.secondary">Brand</Typography>
+                      <Typography variant="body2">{specs.brand}</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" color="text.secondary">Part Type</Typography>
+                      <Typography variant="body2">{specs.partType}</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" color="text.secondary">Bike Model</Typography>
+                      <Typography variant="body2">{specs.bikeModel}</Typography>
+                    </Grid>
                   </Grid>
                 </Paper>
               </Box>
             )}
-
-            <Divider sx={{ my: 3 }} />
-
-            {/* Seller Info */}
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="h6" gutterBottom fontWeight={600}>
-                Seller Information
+            
+            <Divider sx={{ my: 2 }} />
+            
+            <Box>
+              <Typography 
+                variant="subtitle1" 
+                fontWeight="medium" 
+                color="primary"
+                gutterBottom
+                sx={{ display: 'flex', alignItems: 'center' }}
+              >
+                <PersonIcon fontSize="small" sx={{ mr: 0.5 }} />
+                SELLER INFORMATION
               </Typography>
-              
-              <Paper elevation={1} sx={{ p: 2, borderRadius: 2, bgcolor: 'white' }}>
-                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                  <PersonIcon sx={{ mr: 1.5, color: "text.secondary", fontSize: 20 }} />
-                  <Typography variant="body1" fontWeight={600}>
-                    {product.user
-                      ? `${product.user.fname
-                          .split(" ")
-                          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                          .join(" ")} ${product.user.lname
-                            .split(" ")
-                            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                            .join(" ") || ""}`
-                      : "Unknown Seller"}
-                  </Typography>
-                </Box>
-
-                <Divider sx={{ my: 1.5 }} />
-
-                <Stack spacing={1.5} sx={{ mt: 2 }}>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <HomeIcon sx={{ mr: 1.5, color: "text.secondary", fontSize: 20 }} />
-                    <Typography variant="body2">
-                      {product.user?.address
-                        ? product.user.address
-                            .split(" ")
-                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                            .join(" ")
-                        : "No address provided"}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <PhoneIcon sx={{ mr: 1.5, color: "text.secondary", fontSize: 20 }} />
-                    <Typography variant="body2">
-                      {product.user?.pno || "No contact number provided"}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <CalendarIcon sx={{ mr: 1.5, color: "text.secondary", fontSize: 20 }} />
-                    <Typography variant="body2">
-                      Listed on: {formatDate(product.createdAt)}
-                    </Typography>
-                  </Box>
-                </Stack>
-              </Paper>
+              <Typography variant="body1" gutterBottom fontWeight="medium">
+                {fullName}
+              </Typography>
+              <List dense disablePadding>
+                <ListItem disableGutters>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <LocationOnIcon fontSize="small" color="action" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={address} 
+                    primaryTypographyProps={{ variant: 'body2' }} 
+                  />
+                </ListItem>
+                <ListItem disableGutters>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <PhoneIcon fontSize="small" color="action" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={phone} 
+                    primaryTypographyProps={{ variant: 'body2' }} 
+                  />
+                </ListItem>
+                <ListItem disableGutters>
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <CalendarTodayIcon fontSize="small" color="action" />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={`Listed on: ${listedDate}`} 
+                    primaryTypographyProps={{ variant: 'body2' }} 
+                  />
+                </ListItem>
+              </List>
             </Box>
           </Grid>
         </Grid>
       </DialogContent>
-
-      <DialogActions sx={{ p: 2, bgcolor: '#f8f9fa' }}>
-        <Button onClick={onClose} sx={{ fontWeight: 500 }}>Close</Button>
+      
+      <DialogActions sx={{ p: 2, justifyContent: 'flex-end' }}>
+        <Button variant="outlined" onClick={onClose}>
+          Close
+        </Button>
       </DialogActions>
     </Dialog>
   );
