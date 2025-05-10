@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -9,37 +9,48 @@ import {
   Divider,
   useTheme,
   Paper,
+  Fab,
+  Zoom,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import logo from "../assets/logo.png";
 
 export default function Footer() {
   const theme = useTheme();
   const currentYear = new Date().getFullYear();
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
-  const footerLinks = {
-    "Shop": [
-      { name: "All Products", url: "/products" },
-      { name: "New Arrivals", url: "/products/new" },
-      { name: "Best Sellers", url: "/products/best-sellers" },
-      { name: "Brands", url: "/brands" },
-    ],
-    "About": [
-      { name: "Our Story", url: "/about" },
-      { name: "Team", url: "/team" },
-      { name: "Careers", url: "/careers" },
-      { name: "Press", url: "/press" },
-    ],
-    "Support": [
-      { name: "Contact Us", url: "/contact" },
-      { name: "Shipping Policy", url: "/shipping" },
-      { name: "Returns & Exchanges", url: "/returns" },
-      { name: "FAQ", url: "/faq" },
-    ],
+  const footerLinks = {};
+
+  // Control visibility of scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show button when user scrolls down 300px from the top
+      if (window.scrollY > 300) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up event listener
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -60,7 +71,8 @@ export default function Footer() {
             </Box>
             <Typography variant="body2" color="text.secondary" paragraph>
               The ultimate destination for dirt bike enthusiasts in Sri Lanka.
-              We connect buyers and sellers of high-quality dirt bike parts and accessories.
+              We connect buyers and sellers of high-quality dirt bike parts and
+              accessories.
             </Typography>
             <Box sx={{ mt: 3 }}>
               <IconButton
@@ -109,6 +121,35 @@ export default function Footer() {
             </Box>
           </Grid>
 
+          {/* Contact Us (Moved from below) */}
+          <Grid item xs={12} md={4}>
+            <Typography
+              variant="subtitle1"
+              color="text.primary"
+              gutterBottom
+              fontWeight={600}
+            >
+              Contact Us
+            </Typography>
+            <Typography variant="body2" color="text.secondary" paragraph>
+              Have questions? Reach out to us at:
+            </Typography>
+            <Typography variant="body2" color="text.primary" fontWeight={500}>
+              support@bikekade.lk
+            </Typography>
+            <Typography
+              variant="body2"
+              color="text.primary"
+              fontWeight={500}
+              sx={{ mt: 1 }}
+            >
+              +94 11 234 5678
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+              123 Main Street, Colombo 10, Sri Lanka
+            </Typography>
+          </Grid>
+
           {/* Footer Links */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <Grid item xs={6} sm={4} md={2} key={category}>
@@ -140,30 +181,6 @@ export default function Footer() {
               </Box>
             </Grid>
           ))}
-
-          {/* Newsletter */}
-          <Grid item xs={12} md={4}>
-            <Typography
-              variant="subtitle1"
-              color="text.primary"
-              gutterBottom
-              fontWeight={600}
-            >
-              Contact Us
-            </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Have questions? Reach out to us at:
-            </Typography>
-            <Typography variant="body2" color="text.primary" fontWeight={500}>
-              support@bikekade.lk
-            </Typography>
-            <Typography variant="body2" color="text.primary" fontWeight={500} sx={{ mt: 1 }}>
-              +94 11 234 5678
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-              123 Main Street, Colombo 10, Sri Lanka
-            </Typography>
-          </Grid>
         </Grid>
 
         <Divider sx={{ my: 4 }} />
@@ -186,42 +203,34 @@ export default function Footer() {
           >
             © {currentYear} BikeKade.lk - All Rights Reserved
           </Typography>
-
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: 2,
-            }}
-          >
-            <Link
-              component={RouterLink}
-              to="/privacy"
-              color="text.secondary"
-              underline="hover"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              component={RouterLink}
-              to="/terms"
-              color="text.secondary"
-              underline="hover"
-            >
-              Terms of Service
-            </Link>
-            <Link
-              component={RouterLink}
-              to="/sitemap"
-              color="text.secondary"
-              underline="hover"
-            >
-              Sitemap
-            </Link>
-          </Box>
         </Box>
       </Container>
+
+      {/* Scroll to top button */}
+      <Zoom in={showScrollTop}>
+        <Box
+          onClick={scrollToTop}
+          role="presentation"
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
+          }}
+        >
+          <Fab
+            color="primary"
+            size="small"
+            aria-label="scroll back to top"
+            sx={{
+              boxShadow:
+                "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12)",
+            }}
+          >
+            <KeyboardArrowUpIcon />
+          </Fab>
+        </Box>
+      </Zoom>
     </Box>
   );
 }
