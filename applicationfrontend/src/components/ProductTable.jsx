@@ -28,7 +28,7 @@ const ProductTable = ({ products, loading, onEdit, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
   const [activeFilter, setActiveFilter] = useState("All");
-  
+
   const handleFilterClick = (event) => {
     setFilterAnchorEl(event.currentTarget);
   };
@@ -40,23 +40,33 @@ const ProductTable = ({ products, loading, onEdit, onDelete }) => {
     setFilterAnchorEl(null);
   };
 
-  // Filter products based on search term and active filter
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (product.description &&
+        product.description.toLowerCase().includes(searchTerm.toLowerCase()));
+
     if (activeFilter === "All") return matchesSearch;
     return matchesSearch && product.productType === activeFilter;
   });
 
-  // Get unique product types for filtering
-  const productTypes = ["All", ...new Set(products.map(product => product.productType || "Accessory"))];
+  const productTypes = [
+    "All",
+    ...new Set(products.map((product) => product.productType || "Accessory")),
+  ];
 
   return (
     <Box sx={{ p: 2 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+        }}
+      >
         <Typography variant="h5">Your Products</Typography>
-        
+
         <Box sx={{ display: "flex", gap: 2 }}>
           {/* Search Field */}
           <TextField
@@ -72,11 +82,11 @@ const ProductTable = ({ products, loading, onEdit, onDelete }) => {
               ),
             }}
           />
-          
+
           {/* Filter Button */}
           <Tooltip title="Filter by product type">
-            <Button 
-              variant="outlined" 
+            <Button
+              variant="outlined"
               startIcon={<FilterListIcon />}
               onClick={handleFilterClick}
               color={activeFilter !== "All" ? "primary" : "inherit"}
@@ -125,18 +135,18 @@ const ProductTable = ({ products, loading, onEdit, onDelete }) => {
                   {loading
                     ? "Loading..."
                     : searchTerm || activeFilter !== "All"
-                      ? "No products match your search or filter criteria"
-                      : "No products found. Add your first product!"}
+                    ? "No products match your search or filter criteria"
+                    : "No products found. Add your first product!"}
                 </TableCell>
               </TableRow>
             ) : (
               filteredProducts.map((product) => (
-                <TableRow 
+                <TableRow
                   key={product.id}
-                  sx={{ 
-                    '&:hover': { 
-                      backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                    }
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 0, 0.04)",
+                    },
                   }}
                 >
                   <TableCell>
@@ -166,7 +176,11 @@ const ProductTable = ({ products, loading, onEdit, onDelete }) => {
                                 word.charAt(0).toUpperCase() + word.slice(1)
                             )
                             .join(" ")}
-                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
                           onError={(e) => {
                             e.target.onerror = null;
                             e.target.src =
@@ -209,42 +223,63 @@ const ProductTable = ({ products, loading, onEdit, onDelete }) => {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip 
-                      label={product.productType || "Accessory"} 
+                    <Chip
+                      label={product.productType || "Accessory"}
                       size="small"
-                      color={product.productType === "Spare Part" ? "primary" : "default"}
+                      color={
+                        product.productType === "Spare Part"
+                          ? "primary"
+                          : "default"
+                      }
                       variant="outlined"
                     />
                   </TableCell>
                   <TableCell>
                     {product.productType === "Spare Part" ? (
-                      <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 0.5,
+                        }}
+                      >
                         {product.brand && (
-                          <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
                             <strong>Brand:</strong> {product.brand}
                           </Typography>
                         )}
                         {product.partType && (
-                          <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
                             <strong>Part Type:</strong> {product.partType}
                           </Typography>
                         )}
                         {product.bikeModel && (
-                          <Typography variant="body2" sx={{ fontSize: "0.8rem" }}>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.8rem" }}
+                          >
                             <strong>Model:</strong> {product.bikeModel}
                           </Typography>
                         )}
                       </Box>
                     ) : (
-                      <Typography variant="body2" color="text.secondary">N/A</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        N/A
+                      </Typography>
                     )}
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: "flex", gap: 1 }}>
                       <Tooltip title="Edit product">
-                        <IconButton 
-                          size="small" 
-                          color="primary" 
+                        <IconButton
+                          size="small"
+                          color="primary"
                           onClick={() => onEdit(product)}
                         >
                           <EditIcon fontSize="small" />

@@ -1,4 +1,3 @@
-// src/components/products/ActiveFilters.jsx
 import React from "react";
 import { Box, Typography, Chip } from "@mui/material";
 import { PRICE_RANGES } from "./Constants";
@@ -14,7 +13,6 @@ function ActiveFilters({ filters, onRemoveFilter }) {
 
   if (!hasActiveFilters) return null;
 
-  // Count active filters
   const activeFilterCount = Object.keys(filters).filter(
     (key) =>
       filters[key] && (key === "keywords" ? filters[key].length > 0 : true)

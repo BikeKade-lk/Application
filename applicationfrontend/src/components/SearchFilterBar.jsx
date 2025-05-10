@@ -1,34 +1,29 @@
-// src/components/products/SearchFilterBar.jsx
 import React from "react";
-import { 
-  Box, 
-  TextField, 
-  Button, 
-  InputAdornment, 
+import {
+  Box,
+  TextField,
+  Button,
+  InputAdornment,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@mui/material";
 import {
   Search as SearchIcon,
-  FilterList as FilterIcon
+  FilterList as FilterIcon,
 } from "@mui/icons-material";
 
-function SearchFilterBar({ 
-  searchQuery, 
-  onSearchChange, 
-  onFilterToggle
-}) {
+function SearchFilterBar({ searchQuery, onSearchChange, onFilterToggle }) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box 
-      sx={{ 
-        mb: 3, 
-        display: "flex", 
-        flexDirection: isMobile ? 'column' : 'row',
-        alignItems: "center", 
-        gap: 2 
+    <Box
+      sx={{
+        mb: 3,
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        alignItems: "center",
+        gap: 2,
       }}
     >
       <TextField
@@ -42,7 +37,7 @@ function SearchFilterBar({
             <InputAdornment position="start">
               <SearchIcon />
             </InputAdornment>
-          )
+          ),
         }}
         size="small"
       />
@@ -51,9 +46,9 @@ function SearchFilterBar({
         variant="outlined"
         startIcon={<FilterIcon />}
         onClick={onFilterToggle}
-        sx={{ 
+        sx={{
           flexGrow: isMobile ? 1 : 0,
-          whiteSpace: 'nowrap'
+          whiteSpace: "nowrap",
         }}
       >
         Filters

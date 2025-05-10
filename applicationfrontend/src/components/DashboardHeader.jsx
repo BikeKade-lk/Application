@@ -17,7 +17,6 @@ const DashboardHeader = ({ user, onAddProduct, onLogout }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  // Format user's name with proper capitalization
   const formattedName = user.fullName
     ? user.fullName
         .split(" ")

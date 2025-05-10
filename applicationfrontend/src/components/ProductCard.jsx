@@ -1,4 +1,3 @@
-// src/components/products/ProductCard.jsx
 import React from "react";
 import {
   Card,
@@ -10,11 +9,10 @@ import {
   Box,
   Chip,
   Stack,
-  Divider
+  Divider,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-// Styled components for enhanced visuals
 const StyledCard = styled(Card)(({ theme }) => ({
   height: "100%",
   display: "flex",
@@ -74,14 +72,15 @@ function ProductCard({ product, onViewDetails }) {
     productType = "",
     brand = "",
     partType = "",
-    bikeModel = ""
+    bikeModel = "",
   } = product;
 
   const formattedName = formatProductName(name);
   const formattedDescription = capitalizeSentences(description);
-  const truncatedDescription = formattedDescription.length > 60 
-    ? formattedDescription.substring(0, 60) + "..." 
-    : formattedDescription;
+  const truncatedDescription =
+    formattedDescription.length > 60
+      ? formattedDescription.substring(0, 60) + "..."
+      : formattedDescription;
 
   const isSparePartType = productType?.toLowerCase() === "spare part";
 
@@ -97,7 +96,7 @@ function ProductCard({ product, onViewDetails }) {
             e.target.src = "https://via.placeholder.com/300x180?text=No+Image";
           }}
         />
-        
+
         {/* Top-right corner product type badge */}
         {productType && (
           <Chip
@@ -116,24 +115,37 @@ function ProductCard({ product, onViewDetails }) {
       </Box>
 
       <CardContent sx={{ flexGrow: 1, pt: 2 }}>
-        <Typography variant="h6" component="div" sx={{ mb: 1, fontWeight: 600 }}>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ mb: 1, fontWeight: 600 }}
+        >
           {formattedName}
         </Typography>
-        
+
         <Divider sx={{ my: 1 }} />
-        
+
         {/* Price section */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1.5 }}>
-          <PriceTag>
-            Rs.{Number(price).toFixed(2)}
-          </PriceTag>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 1.5,
+          }}
+        >
+          <PriceTag>Rs.{Number(price).toFixed(2)}</PriceTag>
           {brand && (
-            <Typography variant="body2" color="text.secondary" sx={{ fontWeight: "medium" }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ fontWeight: "medium" }}
+            >
               {brand}
             </Typography>
           )}
         </Box>
-        
+
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
           {truncatedDescription || "No description available"}
         </Typography>
@@ -154,7 +166,7 @@ function ProductCard({ product, onViewDetails }) {
           </Stack>
         )}
       </CardContent>
-      
+
       <CardActions sx={{ p: 2, pt: 0 }}>
         <ActionButton
           size="medium"

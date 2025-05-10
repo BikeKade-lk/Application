@@ -1,4 +1,3 @@
-// src/components/products/FilterDrawer.jsx
 import React from "react";
 import {
   Box,

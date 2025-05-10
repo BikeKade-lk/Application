@@ -2,14 +2,6 @@ import React from "react";
 import { Snackbar, Alert, AlertTitle, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-/**
- * Enhanced CustomAlert component with additional features:
- * - Optional alert title
- * - Custom duration control
- * - Responsive positioning options
- * - Close button option
- * - Custom styling support
- */
 const CustomAlert = ({
   alertInfo = {},
   onClose,

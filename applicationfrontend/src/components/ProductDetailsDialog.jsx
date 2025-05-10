@@ -13,7 +13,6 @@ import {
   Paper,
   Card,
   CardMedia,
-  CardContent,
   Chip,
   List,
   ListItem,

@@ -1,4 +1,3 @@
-// src/components/products/ProductGrid.jsx
 import React from "react";
 import {
   Grid,
@@ -24,8 +23,6 @@ function ProductGrid({
   onViewDetails,
 }) {
   const pageCount = Math.ceil(filteredProducts.length / productsPerPage);
-  
-
 
   if (loading) {
     return (

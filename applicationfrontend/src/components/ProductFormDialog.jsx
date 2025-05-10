@@ -20,7 +20,6 @@ import {
 import ImageIcon from "@mui/icons-material/Image";
 import CloseIcon from "@mui/icons-material/Close";
 
-// Constants for dropdown options
 const PRODUCT_TYPES = ["Accessory", "Spare Part"];
 const BRANDS = ["Yamaha", "Honda", "Kawasaki", "Suzuki", "KTM", "Husqvarna"];
 const PART_TYPES = [
@@ -300,7 +299,6 @@ const ProductFormDialog = ({
                   }}
                   onError={(e) => {
                     e.target.onerror = null;
-                    // This would need to be handled by the parent component
                   }}
                 />
               </Box>

@@ -1,4 +1,3 @@
-// src/components/products/constants.js
 export const API_URL = "http://localhost:8080/product";
 
 export const BRANDS = [
@@ -37,7 +36,6 @@ export const PRICE_RANGES = [
   { label: "Over Rs.50,000", value: "50000-999999" },
 ];
 
-// Helper function to format date
 export function formatDate(dateString) {
   if (!dateString) return "N/A";
   const date = new Date(dateString);
