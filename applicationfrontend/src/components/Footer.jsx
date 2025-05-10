@@ -4,15 +4,11 @@ import {
   Container,
   Typography,
   Grid,
-  Link,
   IconButton,
   Divider,
-  useTheme,
-  Paper,
   Fab,
   Zoom,
 } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import YouTubeIcon from "@mui/icons-material/YouTube";
@@ -21,16 +17,11 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import logo from "../assets/logo.png";
 
 export default function Footer() {
-  const theme = useTheme();
   const currentYear = new Date().getFullYear();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  const footerLinks = {};
-
-  // Control visibility of scroll-to-top button
   useEffect(() => {
     const handleScroll = () => {
-      // Show button when user scrolls down 300px from the top
       if (window.scrollY > 300) {
         setShowScrollTop(true);
       } else {
@@ -40,7 +31,6 @@ export default function Footer() {
 
     window.addEventListener("scroll", handleScroll);
 
-    // Clean up event listener
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -121,7 +111,7 @@ export default function Footer() {
             </Box>
           </Grid>
 
-          {/* Contact Us (Moved from below) */}
+          {/* Contact Us */}
           <Grid item xs={12} md={4}>
             <Typography
               variant="subtitle1"
@@ -149,38 +139,6 @@ export default function Footer() {
               123 Main Street, Kurunegala, Sri Lanka
             </Typography>
           </Grid>
-
-          {/* Footer Links */}
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <Grid item xs={6} sm={4} md={2} key={category}>
-              <Typography
-                variant="subtitle1"
-                color="text.primary"
-                gutterBottom
-                fontWeight={600}
-              >
-                {category}
-              </Typography>
-              <Box component="ul" sx={{ p: 0, m: 0, listStyle: "none" }}>
-                {links.map((link) => (
-                  <Box component="li" key={link.name} sx={{ py: 0.5 }}>
-                    <Link
-                      component={RouterLink}
-                      to={link.url}
-                      underline="hover"
-                      color="text.secondary"
-                      sx={{
-                        "&:hover": { color: theme.palette.primary.main },
-                        transition: "color 0.2s",
-                      }}
-                    >
-                      {link.name}
-                    </Link>
-                  </Box>
-                ))}
-              </Box>
-            </Grid>
-          ))}
         </Grid>
 
         <Divider sx={{ my: 4 }} />
