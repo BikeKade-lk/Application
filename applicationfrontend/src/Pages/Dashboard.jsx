@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
 
-// Import custom components
 import DashboardHeader from "../components/DashboardHeader";
 import Footer from "../components/Footer";
 import ProductTable from "../components/ProductTable";
@@ -13,7 +12,6 @@ import CustomAlert from "../components/CustomAlert";
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  // Define state for user
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
@@ -36,14 +34,11 @@ export default function Dashboard() {
     severity: "info",
   });
 
-  // API endpoint
   const API_URL = "http://localhost:8080/product";
 
-  // Load user info on component mount
   useEffect(() => {
     const userInfo = localStorage.getItem("user");
     if (!userInfo) {
-      // Redirect to login if no user info exists
       navigate("/signin");
       return;
     }
@@ -52,7 +47,6 @@ export default function Dashboard() {
     setUser(parsedUser);
   }, [navigate]);
 
-  // Fetch products when user changes
   useEffect(() => {
     if (user) {
       fetchUserProducts();
@@ -72,7 +66,6 @@ export default function Dashboard() {
       setEditingProduct(product);
       setForm({
         ...product,
-        // Set default values for new fields if they don't exist
         productType: product.productType || "Accessory",
         brand: product.brand || "",
         partType: product.partType || "",
@@ -105,7 +98,6 @@ export default function Dashboard() {
   function handleChange(e) {
     const { name, value } = e.target;
 
-    // Special handling for bikeModel - convert to uppercase and replace spaces with dashes
     if (name === "bikeModel") {
       const formattedValue = value.toUpperCase().replace(/\s+/g, "-");
       setForm((prev) => ({ ...prev, [name]: formattedValue }));
@@ -117,9 +109,7 @@ export default function Dashboard() {
   function handleImageChange(e) {
     const file = e.target.files[0];
     if (file) {
-      // Check file size - limit to 1MB
       if (file.size > 1024 * 1024) {
-        // 1MB
         showAlert(
           "Image file is too large. Please use an image smaller than 1MB.",
           "warning"
@@ -129,7 +119,7 @@ export default function Dashboard() {
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setForm((prev) => ({ ...prev, image: reader.result })); // base64 string
+        setForm((prev) => ({ ...prev, image: reader.result }));
         setImagePreview(reader.result);
       };
       reader.readAsDataURL(file);
@@ -147,7 +137,6 @@ export default function Dashboard() {
       return false;
     }
 
-    // Validate Spare Part specific fields
     if (form.productType === "Spare Part") {
       if (!form.brand) {
         showAlert("Brand is required for Spare Parts", "error");
@@ -174,14 +163,12 @@ export default function Dashboard() {
     setLoading(true);
     try {
       if (editingProduct) {
-        // Add userId parameter to ensure ownership check
         await axios.put(
           `${API_URL}/update/${editingProduct.id}?userId=${user.id}`,
           form
         );
         showAlert("Product updated successfully", "success");
       } else {
-        // Use the user/{username}/add endpoint to associate the product with the user
         await axios.post(`${API_URL}/user/${user.username}/add`, form);
         showAlert("Product added successfully", "success");
       }
@@ -205,7 +192,6 @@ export default function Dashboard() {
 
     setLoading(true);
     try {
-      // Add userId parameter to ensure ownership check
       await axios.delete(`${API_URL}/delete/${id}?userId=${user.id}`);
       showAlert("Product deleted successfully", "success");
       fetchUserProducts();
@@ -222,7 +208,6 @@ export default function Dashboard() {
 
     setLoading(true);
     try {
-      // Use the user/name/{username} endpoint to get products for this user
       const response = await axios.get(`${API_URL}/user/name/${user.username}`);
       setProducts(response.data);
     } catch (error) {
@@ -238,7 +223,6 @@ export default function Dashboard() {
     navigate("/signin");
   }
 
-  // Display loading while checking auth
   if (!user) {
     return (
       <Box
@@ -259,7 +243,7 @@ export default function Dashboard() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh", // This ensures the container takes at least the full viewport height
+        minHeight: "100vh",
       }}
     >
       {/* App Bar */}
@@ -269,7 +253,6 @@ export default function Dashboard() {
         onLogout={handleLogout}
       />
 
-      {/* Main Content - will grow to fill available space */}
       <Box sx={{ flexGrow: 1, mb: 2 }}>
         {/* Product Table */}
         <ProductTable
@@ -292,11 +275,8 @@ export default function Dashboard() {
           loading={loading}
         />
 
-        {/* Alert Snackbar */}
         <CustomAlert alertInfo={alertInfo} onClose={handleCloseAlert} />
       </Box>
-
-      {/* Footer - will stay at the bottom */}
       <Footer />
     </Box>
   );

@@ -8,8 +8,6 @@ import {
   Typography,
   TextField,
   Button,
-  Checkbox,
-  FormControlLabel,
   Box,
   Paper,
   List,
@@ -139,23 +137,30 @@ export default function Signup() {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", bgcolor: "#f5f7fa" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        bgcolor: "#f5f7fa",
+      }}
+    >
       <Header />
       <Container maxWidth="sm" sx={{ py: 6 }}>
-        <Paper 
-          elevation={3} 
-          sx={{ 
-            p: 4, 
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
             borderRadius: 2,
-            boxShadow: "0 8px 24px rgba(0,0,0,0.08)", 
+            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
           }}
         >
-          <Typography 
-            variant="h4" 
-            align="center" 
+          <Typography
+            variant="h4"
+            align="center"
             gutterBottom
-            sx={{ 
-              fontWeight: 600, 
+            sx={{
+              fontWeight: 600,
               mb: 3,
               color: "#333",
             }}
@@ -164,9 +169,9 @@ export default function Signup() {
           </Typography>
 
           {signupSuccess && (
-            <Alert 
-              severity="success" 
-              sx={{ 
+            <Alert
+              severity="success"
+              sx={{
                 mb: 3,
                 borderRadius: 1,
               }}
@@ -176,9 +181,9 @@ export default function Signup() {
           )}
 
           {formErrors.form && (
-            <Alert 
-              severity="error" 
-              sx={{ 
+            <Alert
+              severity="error"
+              sx={{
                 mb: 3,
                 borderRadius: 1,
               }}
@@ -200,7 +205,7 @@ export default function Signup() {
                   helperText={formErrors.fname}
                   required
                   sx={{
-                    '& .MuiOutlinedInput-root': {
+                    "& .MuiOutlinedInput-root": {
                       borderRadius: 1,
                     },
                   }}
@@ -214,7 +219,7 @@ export default function Signup() {
                   value={formData.lname}
                   onChange={handleChange}
                   sx={{
-                    '& .MuiOutlinedInput-root': {
+                    "& .MuiOutlinedInput-root": {
                       borderRadius: 1,
                     },
                   }}
@@ -234,7 +239,7 @@ export default function Signup() {
               required
               sx={{
                 mt: 2,
-                '& .MuiOutlinedInput-root': {
+                "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
                 },
               }}
@@ -251,7 +256,7 @@ export default function Signup() {
               helperText={formErrors.pno}
               required
               sx={{
-                '& .MuiOutlinedInput-root': {
+                "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
                 },
               }}
@@ -268,7 +273,7 @@ export default function Signup() {
               helperText={formErrors.address}
               required
               sx={{
-                '& .MuiOutlinedInput-root': {
+                "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
                 },
               }}
@@ -282,11 +287,14 @@ export default function Signup() {
               value={formData.password}
               onChange={handleChange}
               margin="normal"
-              error={!isPasswordValid && formData.password !== "" || !!formErrors.password}
+              error={
+                (!isPasswordValid && formData.password !== "") ||
+                !!formErrors.password
+              }
               helperText={formErrors.password}
               required
               sx={{
-                '& .MuiOutlinedInput-root': {
+                "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
                 },
               }}
@@ -306,8 +314,17 @@ export default function Signup() {
             />
 
             {formData.password && (
-              <List dense sx={{ bgcolor: "#f8f9fa", borderRadius: 1, mt: 1, mb: 2 }}>
-                {["At least 8 characters long", "At least one uppercase letter", "At least one lowercase letter", "At least one number", "At least one special character"].map((requirement, idx) => {
+              <List
+                dense
+                sx={{ bgcolor: "#f8f9fa", borderRadius: 1, mt: 1, mb: 2 }}
+              >
+                {[
+                  "At least 8 characters long",
+                  "At least one uppercase letter",
+                  "At least one lowercase letter",
+                  "At least one number",
+                  "At least one special character",
+                ].map((requirement, idx) => {
                   const isError = passwordErrors.includes(requirement);
                   return (
                     <ListItem key={idx} sx={{ py: 0.5 }}>
@@ -315,7 +332,10 @@ export default function Signup() {
                         {isError ? (
                           <ErrorOutlineIcon color="error" fontSize="small" />
                         ) : (
-                          <CheckCircleOutlineIcon color="success" fontSize="small" />
+                          <CheckCircleOutlineIcon
+                            color="success"
+                            fontSize="small"
+                          />
                         )}
                       </ListItemIcon>
                       <ListItemText
@@ -340,11 +360,14 @@ export default function Signup() {
               value={formData.confirmPassword}
               onChange={handleChange}
               margin="normal"
-              error={!passwordsMatch && formData.confirmPassword !== "" || !!formErrors.confirmPassword}
+              error={
+                (!passwordsMatch && formData.confirmPassword !== "") ||
+                !!formErrors.confirmPassword
+              }
               helperText={formErrors.confirmPassword}
               required
               sx={{
-                '& .MuiOutlinedInput-root': {
+                "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
                 },
               }}
@@ -385,10 +408,10 @@ export default function Signup() {
               Create Account
             </Button>
 
-            <Box 
-              sx={{ 
-                mt: 4, 
-                pt: 3, 
+            <Box
+              sx={{
+                mt: 4,
+                pt: 3,
                 borderTop: "1px solid #eaeaea",
                 textAlign: "center",
               }}

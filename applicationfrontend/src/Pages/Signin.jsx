@@ -70,27 +70,34 @@ export default function Signin() {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", bgcolor: "#f5f7fa" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        bgcolor: "#f5f7fa",
+      }}
+    >
       <Header />
       <Container
         maxWidth="sm"
         sx={{ flexGrow: 1, display: "flex", alignItems: "center", py: 5 }}
       >
-        <Paper 
-          elevation={3} 
-          sx={{ 
-            p: 4, 
-            width: "100%", 
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            width: "100%",
             borderRadius: 2,
             boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
           }}
         >
-          <Typography 
-            variant="h4" 
-            align="center" 
+          <Typography
+            variant="h4"
+            align="center"
             gutterBottom
-            sx={{ 
-              fontWeight: 600, 
+            sx={{
+              fontWeight: 600,
               mb: 3,
               color: "#333",
             }}
@@ -99,9 +106,9 @@ export default function Signin() {
           </Typography>
 
           {error && (
-            <Alert 
-              severity="error" 
-              sx={{ 
+            <Alert
+              severity="error"
+              sx={{
                 mb: 3,
                 borderRadius: 1,
               }}
@@ -122,7 +129,7 @@ export default function Signin() {
               required
               sx={{
                 mb: 2,
-                '& .MuiOutlinedInput-root': {
+                "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
                 },
               }}
@@ -139,7 +146,7 @@ export default function Signin() {
               required
               sx={{
                 mb: 3,
-                '& .MuiOutlinedInput-root': {
+                "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
                 },
               }}
@@ -179,7 +186,7 @@ export default function Signin() {
             >
               Sign In
             </Button>
-            
+
             <Typography
               variant="body2"
               onClick={handleResetPassword}
@@ -196,11 +203,11 @@ export default function Signin() {
             >
               Forgot your password? Reset here
             </Typography>
-            
-            <Box 
-              sx={{ 
-                mt: 4, 
-                pt: 3, 
+
+            <Box
+              sx={{
+                mt: 4,
+                pt: 3,
                 borderTop: "1px solid #eaeaea",
                 textAlign: "center",
               }}

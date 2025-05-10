@@ -5,8 +5,6 @@ import {
   Typography,
   Button,
   Box,
-  FormControlLabel,
-  Checkbox,
   Alert,
   Paper,
   List,
@@ -52,14 +50,14 @@ export default function ResetPassword() {
       { text: "At least one uppercase letter", met: /[A-Z]/.test(password) },
       { text: "At least one lowercase letter", met: /[a-z]/.test(password) },
       { text: "At least one number", met: /[0-9]/.test(password) },
-      { 
-        text: "At least one special character", 
-        met: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password) 
+      {
+        text: "At least one special character",
+        met: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password),
       },
     ];
-    
+
     setPasswordRequirements(updatedRequirements);
-    return updatedRequirements.every(req => req.met);
+    return updatedRequirements.every((req) => req.met);
   };
 
   const handleChange = (e) => {
@@ -67,12 +65,14 @@ export default function ResetPassword() {
     setFormData({ ...formData, [name]: value });
     setErrors([]);
     setSuccessMessage("");
-    
+
     if (name === "newPassword") {
       validatePassword(value);
-      setPasswordsMatch(formData.confirmPassword === "" || value === formData.confirmPassword);
+      setPasswordsMatch(
+        formData.confirmPassword === "" || value === formData.confirmPassword
+      );
     }
-    
+
     if (name === "confirmPassword") {
       setPasswordsMatch(value === formData.newPassword);
     }
@@ -92,7 +92,7 @@ export default function ResetPassword() {
       return;
     }
 
-    const allRequirementsMet = passwordRequirements.every(req => req.met);
+    const allRequirementsMet = passwordRequirements.every((req) => req.met);
     if (!allRequirementsMet) {
       setErrors(["Password does not meet all requirements."]);
       return;
@@ -121,7 +121,14 @@ export default function ResetPassword() {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", bgcolor: "#f5f7fa" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        bgcolor: "#f5f7fa",
+      }}
+    >
       <Header />
       <Container maxWidth="sm" sx={{ py: 6 }}>
         <Paper
@@ -132,12 +139,12 @@ export default function ResetPassword() {
             boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
           }}
         >
-          <Typography 
-            variant="h4" 
-            align="center" 
+          <Typography
+            variant="h4"
+            align="center"
             gutterBottom
-            sx={{ 
-              fontWeight: 600, 
+            sx={{
+              fontWeight: 600,
               mb: 3,
               color: "#333",
             }}
@@ -148,10 +155,10 @@ export default function ResetPassword() {
           {errors.length > 0 && (
             <Box mb={3}>
               {errors.map((err, idx) => (
-                <Alert 
-                  severity="error" 
-                  key={idx} 
-                  sx={{ 
+                <Alert
+                  severity="error"
+                  key={idx}
+                  sx={{
                     mb: 1,
                     borderRadius: 1,
                   }}
@@ -163,9 +170,9 @@ export default function ResetPassword() {
           )}
 
           {successMessage && (
-            <Alert 
-              severity="success" 
-              sx={{ 
+            <Alert
+              severity="success"
+              sx={{
                 mb: 3,
                 borderRadius: 1,
               }}
@@ -185,7 +192,7 @@ export default function ResetPassword() {
               required
               sx={{
                 mb: 2,
-                '& .MuiOutlinedInput-root': {
+                "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
                 },
               }}
@@ -202,7 +209,7 @@ export default function ResetPassword() {
               required
               sx={{
                 mb: 1,
-                '& .MuiOutlinedInput-root': {
+                "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
                 },
               }}
@@ -222,12 +229,18 @@ export default function ResetPassword() {
             />
 
             {formData.newPassword && (
-              <List dense sx={{ bgcolor: "#f8f9fa", borderRadius: 1, mt: 1, mb: 2 }}>
+              <List
+                dense
+                sx={{ bgcolor: "#f8f9fa", borderRadius: 1, mt: 1, mb: 2 }}
+              >
                 {passwordRequirements.map((req, idx) => (
                   <ListItem key={idx} sx={{ py: 0.5 }}>
                     <ListItemIcon sx={{ minWidth: 30 }}>
                       {req.met ? (
-                        <CheckCircleOutlineIcon color="success" fontSize="small" />
+                        <CheckCircleOutlineIcon
+                          color="success"
+                          fontSize="small"
+                        />
                       ) : (
                         <ErrorOutlineIcon color="error" fontSize="small" />
                       )}
@@ -255,10 +268,14 @@ export default function ResetPassword() {
               margin="normal"
               required
               error={!passwordsMatch && formData.confirmPassword !== ""}
-              helperText={!passwordsMatch && formData.confirmPassword !== "" ? "Passwords do not match" : ""}
+              helperText={
+                !passwordsMatch && formData.confirmPassword !== ""
+                  ? "Passwords do not match"
+                  : ""
+              }
               sx={{
                 mb: 2,
-                '& .MuiOutlinedInput-root': {
+                "& .MuiOutlinedInput-root": {
                   borderRadius: 1,
                 },
               }}
@@ -299,10 +316,10 @@ export default function ResetPassword() {
               Reset Password
             </Button>
 
-            <Box 
-              sx={{ 
-                mt: 4, 
-                pt: 3, 
+            <Box
+              sx={{
+                mt: 4,
+                pt: 3,
                 borderTop: "1px solid #eaeaea",
                 textAlign: "center",
               }}

@@ -1,13 +1,10 @@
-// src/Pages/Products.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import { Box, Typography, Snackbar, Alert } from "@mui/material";
 import axios from "axios";
 
-// Layout components
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-// Product page components
 import SearchFilterBar from "../components/SearchFilterBar";
 import ActiveFilters from "../components/ActiveFilters";
 import FilterDrawer from "../components/FilterDrawer";
@@ -16,7 +13,6 @@ import ProductDetailsDialog from "../components/ProductDetailsDialog";
 import { API_URL } from "../components/Constants";
 
 export default function Products() {
-  // States
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,11 +32,9 @@ export default function Products() {
   const [page, setPage] = useState(1);
   const [productsPerPage] = useState(12);
 
-  // Product details dialog
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Alert handlers
   const showAlert = useCallback((message, severity = "info") => {
     setAlertInfo({ open: true, message, severity });
   }, []);
@@ -49,7 +43,6 @@ export default function Products() {
     setAlertInfo((prev) => ({ ...prev, open: false }));
   }, []);
 
-  // UI event handlers
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -96,7 +89,6 @@ export default function Products() {
     setDetailsDialogOpen(false);
   };
 
-  // Fetch products with useCallback
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
@@ -110,7 +102,6 @@ export default function Products() {
     }
   }, [showAlert]);
 
-  // Apply filters
   const filterProducts = (products) => {
     return products.filter((product) => {
       if (
@@ -153,7 +144,6 @@ export default function Products() {
     });
   };
 
-  // Load products on mount
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);

@@ -475,7 +475,6 @@ export default function Home() {
           </Paper>
         </Container>
       </Box>
-
       <Footer />
     </Box>
   );
