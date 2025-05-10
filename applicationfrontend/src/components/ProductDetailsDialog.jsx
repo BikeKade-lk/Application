@@ -1,24 +1,24 @@
 import React from "react";
-import { 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
-  IconButton, 
-  Typography, 
-  Box, 
-  Grid, 
-  Divider, 
-  Button, 
-  Paper, 
-  Card, 
-  CardMedia, 
-  CardContent, 
-  Chip, 
-  List, 
-  ListItem, 
-  ListItemIcon, 
-  ListItemText
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Typography,
+  Box,
+  Grid,
+  Divider,
+  Button,
+  Paper,
+  Card,
+  CardMedia,
+  CardContent,
+  Chip,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -47,11 +47,11 @@ function ProductDetailsDialog({ open, product, onClose }) {
   const fullName = product.user
     ? `${product.user.fname
         .split(" ")
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ")} ${product.user.lname
-          .split(" ")
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ")}`
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")}`
     : "Unknown Seller";
 
   const address = product.user?.address
@@ -65,8 +65,7 @@ function ProductDetailsDialog({ open, product, onClose }) {
   const listedDate = formatDate(product.createdAt);
 
   const hasSpecs =
-    product.productType === "Spare Part" ||
-    product.productType === "Accessory";
+    product.productType === "Spare Part" || product.productType === "Accessory";
 
   const specs = {
     productType: product.productType,
@@ -75,17 +74,18 @@ function ProductDetailsDialog({ open, product, onClose }) {
     bikeModel: product.bikeModel || "N/A",
   };
 
-  const imageUrl = product.image || "https://via.placeholder.com/600x400?text=No+Image";
+  const imageUrl =
+    product.image || "https://via.placeholder.com/600x400?text=No+Image";
   const price = Number(product.price).toFixed(2);
   const description = product.description
     ? capitalizeSentences(product.description)
     : "No description available";
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose} 
-      maxWidth="md" 
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
       fullWidth
       aria-labelledby="product-details-dialog-title"
     >
@@ -95,7 +95,7 @@ function ProductDetailsDialog({ open, product, onClose }) {
           aria-label="close"
           onClick={onClose}
           sx={{
-            position: 'absolute',
+            position: "absolute",
             right: 8,
             top: 8,
             color: (theme) => theme.palette.grey[500],
@@ -104,7 +104,7 @@ function ProductDetailsDialog({ open, product, onClose }) {
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      
+
       <DialogContent dividers>
         <Grid container spacing={3}>
           {/* Product Image */}
@@ -115,29 +115,39 @@ function ProductDetailsDialog({ open, product, onClose }) {
                 height="300"
                 image={imageUrl}
                 alt={capitalizedName}
-                sx={{ 
+                sx={{
                   objectFit: "contain",
                   bgcolor: "grey.100",
-                  borderRadius: 1
+                  borderRadius: 1,
                 }}
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = "https://via.placeholder.com/600x400?text=No+Image";
+                  e.target.src =
+                    "https://via.placeholder.com/600x400?text=No+Image";
                 }}
               />
             </Card>
           </Grid>
-          
+
           {/* Product Details */}
           <Grid item xs={12} md={6}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                mb: 2,
+              }}
+            >
               <Box>
-                <Typography variant="h6" component="h2" gutterBottom>{capitalizedName}</Typography>
-                <Chip 
-                  label={product.productType} 
-                  size="small" 
-                  color="primary" 
-                  variant="outlined" 
+                <Typography variant="h6" component="h2" gutterBottom>
+                  {capitalizedName}
+                </Typography>
+                <Chip
+                  label={product.productType}
+                  size="small"
+                  color="primary"
+                  variant="outlined"
                   sx={{ mb: 1 }}
                 />
               </Box>
@@ -145,14 +155,14 @@ function ProductDetailsDialog({ open, product, onClose }) {
                 Rs. {price}
               </Typography>
             </Box>
-            
+
             <Box sx={{ mb: 3 }}>
-              <Typography 
-                variant="subtitle1" 
-                fontWeight="medium" 
-                color="primary" 
+              <Typography
+                variant="subtitle1"
+                fontWeight="medium"
+                color="primary"
                 gutterBottom
-                sx={{ display: 'flex', alignItems: 'center' }}
+                sx={{ display: "flex", alignItems: "center" }}
               >
                 <DescriptionIcon fontSize="small" sx={{ mr: 0.5 }} />
                 DESCRIPTION
@@ -161,15 +171,15 @@ function ProductDetailsDialog({ open, product, onClose }) {
                 {description}
               </Typography>
             </Box>
-            
+
             {hasSpecs && (
               <Box sx={{ mb: 3 }}>
-                <Typography 
-                  variant="subtitle1" 
+                <Typography
+                  variant="subtitle1"
                   fontWeight="medium"
                   color="primary"
                   gutterBottom
-                  sx={{ display: 'flex', alignItems: 'center' }}
+                  sx={{ display: "flex", alignItems: "center" }}
                 >
                   <InfoIcon fontSize="small" sx={{ mr: 0.5 }} />
                   SPECIFICATIONS
@@ -177,35 +187,45 @@ function ProductDetailsDialog({ open, product, onClose }) {
                 <Paper variant="outlined" sx={{ p: 2 }}>
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
-                      <Typography variant="body2" color="text.secondary">Product Type</Typography>
-                      <Typography variant="body2">{specs.productType}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Product Type
+                      </Typography>
+                      <Typography variant="body2">
+                        {specs.productType}
+                      </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography variant="body2" color="text.secondary">Brand</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Brand
+                      </Typography>
                       <Typography variant="body2">{specs.brand}</Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography variant="body2" color="text.secondary">Part Type</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Part Type
+                      </Typography>
                       <Typography variant="body2">{specs.partType}</Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography variant="body2" color="text.secondary">Bike Model</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Bike Model
+                      </Typography>
                       <Typography variant="body2">{specs.bikeModel}</Typography>
                     </Grid>
                   </Grid>
                 </Paper>
               </Box>
             )}
-            
+
             <Divider sx={{ my: 2 }} />
-            
+
             <Box>
-              <Typography 
-                variant="subtitle1" 
-                fontWeight="medium" 
+              <Typography
+                variant="subtitle1"
+                fontWeight="medium"
                 color="primary"
                 gutterBottom
-                sx={{ display: 'flex', alignItems: 'center' }}
+                sx={{ display: "flex", alignItems: "center" }}
               >
                 <PersonIcon fontSize="small" sx={{ mr: 0.5 }} />
                 SELLER INFORMATION
@@ -218,27 +238,27 @@ function ProductDetailsDialog({ open, product, onClose }) {
                   <ListItemIcon sx={{ minWidth: 36 }}>
                     <LocationOnIcon fontSize="small" color="action" />
                   </ListItemIcon>
-                  <ListItemText 
-                    primary={address} 
-                    primaryTypographyProps={{ variant: 'body2' }} 
+                  <ListItemText
+                    primary={address}
+                    primaryTypographyProps={{ variant: "body2" }}
                   />
                 </ListItem>
                 <ListItem disableGutters>
                   <ListItemIcon sx={{ minWidth: 36 }}>
                     <PhoneIcon fontSize="small" color="action" />
                   </ListItemIcon>
-                  <ListItemText 
-                    primary={phone} 
-                    primaryTypographyProps={{ variant: 'body2' }} 
+                  <ListItemText
+                    primary={phone}
+                    primaryTypographyProps={{ variant: "body2" }}
                   />
                 </ListItem>
                 <ListItem disableGutters>
                   <ListItemIcon sx={{ minWidth: 36 }}>
                     <CalendarTodayIcon fontSize="small" color="action" />
                   </ListItemIcon>
-                  <ListItemText 
-                    primary={`Listed on: ${listedDate}`} 
-                    primaryTypographyProps={{ variant: 'body2' }} 
+                  <ListItemText
+                    primary={`Listed on: ${listedDate}`}
+                    primaryTypographyProps={{ variant: "body2" }}
                   />
                 </ListItem>
               </List>
@@ -246,8 +266,8 @@ function ProductDetailsDialog({ open, product, onClose }) {
           </Grid>
         </Grid>
       </DialogContent>
-      
-      <DialogActions sx={{ p: 2, justifyContent: 'flex-end' }}>
+
+      <DialogActions sx={{ p: 2, justifyContent: "flex-end" }}>
         <Button variant="outlined" onClick={onClose}>
           Close
         </Button>

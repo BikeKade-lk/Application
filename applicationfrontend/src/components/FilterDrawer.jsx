@@ -27,27 +27,37 @@ function FilterDrawer({
   onClearFilters,
 }) {
   return (
-    <Drawer 
-      anchor="left" 
-      open={open} 
+    <Drawer
+      anchor="left"
+      open={open}
       onClose={onClose}
       PaperProps={{
         sx: {
-          borderRadius: '0 16px 16px 0',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-        }
+          borderRadius: "0 16px 16px 0",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+        },
       }}
     >
       <Paper elevation={0} sx={{ width: 280, p: 3 }} role="presentation">
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, display: 'flex', alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 600, display: "flex", alignItems: "center" }}
+          >
             <FilterAltIcon sx={{ mr: 1 }} /> Filter Products
           </Typography>
           <IconButton size="small" onClick={onClose} aria-label="close filters">
             <CloseIcon />
           </IconButton>
         </Box>
-        
+
         <Divider sx={{ mb: 3 }} />
 
         <Stack spacing={2.5}>
@@ -113,10 +123,10 @@ function FilterDrawer({
             fullWidth
             size="small"
             variant="outlined"
-            sx={{ 
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2
-              }
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+              },
             }}
           />
 
@@ -138,30 +148,30 @@ function FilterDrawer({
             </Select>
           </FormControl>
 
-          <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
-            <Button 
-              variant="contained" 
+          <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
+            <Button
+              variant="contained"
               fullWidth
-              color="primary" 
-              onClick={onClose} 
-              sx={{ 
-                mt: 2, 
+              color="primary"
+              onClick={onClose}
+              sx={{
+                mt: 2,
                 borderRadius: 2,
-                textTransform: 'none',
-                fontWeight: 600
+                textTransform: "none",
+                fontWeight: 600,
               }}
             >
               Apply Filters
             </Button>
-            <Button 
-              variant="outlined" 
+            <Button
+              variant="outlined"
               color="primary"
-              onClick={onClearFilters} 
-              sx={{ 
-                mt: 2, 
+              onClick={onClearFilters}
+              sx={{
+                mt: 2,
                 borderRadius: 2,
-                textTransform: 'none',
-                fontWeight: 600
+                textTransform: "none",
+                fontWeight: 600,
               }}
             >
               Clear
