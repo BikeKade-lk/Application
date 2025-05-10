@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -23,8 +23,31 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import bg1 from "../assets/bgimage1.png";
+import bg2 from "../assets/bgimage2.png";
+import bg3 from "../assets/bgimage3.png";
+import bg4 from "../assets/bgimage4.png";
+
+const bgImages = [bg1, bg2, bg3, bg4];
 
 export default function Home() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [nextImageIndex, setNextImageIndex] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentImageIndex(nextImageIndex);
+        setNextImageIndex((nextImageIndex + 1) % bgImages.length);
+        setIsTransitioning(false);
+      }, 1000); // Match this with the fade duration in CSS
+    }, 10000);
+
+    return () => clearInterval(intervalId);
+  }, [nextImageIndex]);
+
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -34,32 +57,67 @@ export default function Home() {
       <Header />
       <Box
         sx={{
-          backgroundImage: "url('/hero-background.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
           position: "relative",
-          height: "70vh",
-          display: "flex",
-          alignItems: "center",
-          "&:before": {
-            content: '""',
+          height: "100vh",
+          overflow: "hidden",
+        }}
+      >
+        {/* Current image */}
+        <Box
+          sx={{
+            backgroundImage: `url(${bgImages[currentImageIndex]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            height: "100%",
+            width: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: 1,
+          }}
+        />
+        
+        {/* Next image - shown during transition */}
+        <Box
+          sx={{
+            backgroundImage: `url(${bgImages[nextImageIndex]})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            height: "100%",
+            width: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: isTransitioning ? 2 : 0,
+            opacity: isTransitioning ? 1 : 0,
+            transition: "opacity 1s ease-in-out",
+          }}
+        />
+        
+        {/* Dark overlay for better text readability */}
+        <Box
+          sx={{
             position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: alpha(theme.palette.primary.dark, 0.7),
-            zIndex: 1,
-          },
-        }}
-      >
+            backgroundColor: "rgba(0,0,0,0.4)",
+            zIndex: 3,
+          }}
+        />
+
         <Container
           maxWidth="lg"
           sx={{
             position: "relative",
-            zIndex: 2,
+            zIndex: 4,
             textAlign: "center",
             color: "white",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
           }}
         >
           <Box
@@ -190,178 +248,177 @@ export default function Home() {
           The premier marketplace for all your dirt bike needs
         </Typography>
 
-<Container>
-      <Box 
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          gap: 4,
-          justifyContent: 'space-between',
-          alignItems: 'stretch',
-          width: '100%'
-        }}
-      >
-        {/* Wide Selection Card */}
-        <Card
-          elevation={3}
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            transition: "transform 0.3s ease, box-shadow 0.3s ease",
-            "&:hover": {
-              transform: "translateY(-8px)",
-              boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
-            },
-            borderRadius: 2,
-            overflow: "hidden",
-          }}
-        >
-          <CardMedia
-            component="div"
+        <Container>
+          <Box
             sx={{
-              pt: "56.25%", // 16:9 aspect ratio
-              position: "relative",
-              backgroundColor: theme.palette.primary.light,
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              gap: 4,
+              justifyContent: "space-between",
+              alignItems: "stretch",
+              width: "100%",
             }}
           >
-            <Box
+            {/* Wide Selection Card */}
+            <Card
+              elevation={3}
               sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                color: "white",
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-8px)",
+                  boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
+                },
+                borderRadius: 2,
+                overflow: "hidden",
               }}
             >
-              <SpeedIcon sx={{ fontSize: 60 }} />
-            </Box>
-          </CardMedia>
-          <CardContent sx={{ flexGrow: 1, p: 3 }}>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h3"
-              sx={{ fontWeight: 600 }}
-            >
-              Wide Selection
-            </Typography>
-            <Typography variant="body1">
-              Browse our extensive catalog of dirt bike parts and
-              accessories for all major brands. We offer everything from
-              engines to smallest bolts, all in one place.
-            </Typography>
-          </CardContent>
-        </Card>
+              <CardMedia
+                component="div"
+                sx={{
+                  pt: "56.25%",
+                  position: "relative",
+                  backgroundColor: theme.palette.primary.light,
+                }}
+              >
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    color: "white",
+                  }}
+                >
+                  <SpeedIcon sx={{ fontSize: 60 }} />
+                </Box>
+              </CardMedia>
+              <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h3"
+                  sx={{ fontWeight: 600 }}
+                >
+                  Wide Selection
+                </Typography>
+                <Typography variant="body1">
+                  Browse our extensive catalog of dirt bike parts and
+                  accessories for all major brands. We offer everything from
+                  engines to smallest bolts, all in one place.
+                </Typography>
+              </CardContent>
+            </Card>
 
-        {/* Quality Products Card */}
-        <Card
-          elevation={3}
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            transition: "transform 0.3s ease, box-shadow 0.3s ease",
-            "&:hover": {
-              transform: "translateY(-8px)",
-              boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
-            },
-            borderRadius: 2,
-            overflow: "hidden",
-          }}
-        >
-          <CardMedia
-            component="div"
-            sx={{
-              pt: "56.25%", // 16:9 aspect ratio
-              position: "relative",
-              backgroundColor: theme.palette.secondary.light,
-            }}
-          >
-            <Box
+            {/* Quality Products Card */}
+            <Card
+              elevation={3}
               sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                color: "white",
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-8px)",
+                  boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
+                },
+                borderRadius: 2,
+                overflow: "hidden",
               }}
             >
-              <BuildIcon sx={{ fontSize: 60 }} />
-            </Box>
-          </CardMedia>
-          <CardContent sx={{ flexGrow: 1, p: 3 }}>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h3"
-              sx={{ fontWeight: 600 }}
-            >
-              Quality Products
-            </Typography>
-            <Typography variant="body1">
-              We source only the best parts to ensure performance,
-              durability and safety. Every product on our platform meets
-              strict quality standards.
-            </Typography>
-          </CardContent>
-        </Card>
+              <CardMedia
+                component="div"
+                sx={{
+                  pt: "56.25%",
+                  position: "relative",
+                  backgroundColor: theme.palette.secondary.light,
+                }}
+              >
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    color: "white",
+                  }}
+                >
+                  <BuildIcon sx={{ fontSize: 60 }} />
+                </Box>
+              </CardMedia>
+              <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h3"
+                  sx={{ fontWeight: 600 }}
+                >
+                  Quality Products
+                </Typography>
+                <Typography variant="body1">
+                  We source only the best parts to ensure performance,
+                  durability and safety. Every product on our platform meets
+                  strict quality standards.
+                </Typography>
+              </CardContent>
+            </Card>
 
-        {/* Expert Support Card */}
-        <Card
-          elevation={3}
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            transition: "transform 0.3s ease, box-shadow 0.3s ease",
-            "&:hover": {
-              transform: "translateY(-8px)",
-              boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
-            },
-            borderRadius: 2,
-            overflow: "hidden",
-          }}
-        >
-          <CardMedia
-            component="div"
-            sx={{
-              pt: "56.25%", // 16:9 aspect ratio
-              position: "relative",
-              backgroundColor: theme.palette.error.light,
-            }}
-          >
-            <Box
+            {/* Expert Support Card */}
+            <Card
+              elevation={3}
               sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                color: "white",
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-8px)",
+                  boxShadow: "0 12px 20px rgba(0,0,0,0.1)",
+                },
+                borderRadius: 2,
+                overflow: "hidden",
               }}
             >
-              <SupportAgentIcon sx={{ fontSize: 60 }} />
-            </Box>
-          </CardMedia>
-          <CardContent sx={{ flexGrow: 1, p: 3 }}>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h3"
-              sx={{ fontWeight: 600 }}
-            >
-              Expert Support
-            </Typography>
-            <Typography variant="body1">
-              Our team of dirt bike enthusiasts is here to help you find the
-              right parts. Get personalized recommendations from people who
-              share your passion.
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
-    </Container>
-        
+              <CardMedia
+                component="div"
+                sx={{
+                  pt: "56.25%",
+                  position: "relative",
+                  backgroundColor: theme.palette.error.light,
+                }}
+              >
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    color: "white",
+                  }}
+                >
+                  <SupportAgentIcon sx={{ fontSize: 60 }} />
+                </Box>
+              </CardMedia>
+              <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h3"
+                  sx={{ fontWeight: 600 }}
+                >
+                  Expert Support
+                </Typography>
+                <Typography variant="body1">
+                  Our team of dirt bike enthusiasts is here to help you find the
+                  right parts. Get personalized recommendations from people who
+                  share your passion.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Box>
+        </Container>
       </Container>
 
       {/* Call to Action */}
