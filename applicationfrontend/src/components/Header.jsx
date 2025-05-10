@@ -15,20 +15,15 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
-  Avatar,
-  Menu,
-  MenuItem,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
 
-// MUI Icons
 import MenuIcon from "@mui/icons-material/Menu";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import LoginIcon from "@mui/icons-material/Login";
 import HomeIcon from "@mui/icons-material/Home";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function Header() {
@@ -36,20 +31,11 @@ export default function Header() {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  
+
   const isActive = (path) => location.pathname === path;
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
-  };
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
   };
 
   const menuItems = [
@@ -132,13 +118,13 @@ export default function Header() {
   );
 
   return (
-    <AppBar 
-      position="sticky" 
+    <AppBar
+      position="sticky"
       elevation={0}
-      sx={{ 
-        bgcolor: "background.paper", 
+      sx={{
+        bgcolor: "background.paper",
         borderBottom: `1px solid ${theme.palette.divider}`,
-        boxShadow: '0 4px 6px rgba(0,0,0,0.04)'
+        boxShadow: "0 4px 6px rgba(0,0,0,0.04)",
       }}
     >
       <Container maxWidth="xl">
@@ -214,7 +200,7 @@ export default function Header() {
                   {item.text}
                 </Button>
               ))}
-              
+
               <Button
                 component={Link}
                 to="/products"
@@ -238,11 +224,11 @@ export default function Header() {
               >
                 Products
               </Button>
-              
+
               <Box sx={{ mx: 2 }}>
                 <Divider orientation="vertical" flexItem />
               </Box>
-              
+
               <Button
                 component={Link}
                 to="/signup"
@@ -262,7 +248,7 @@ export default function Header() {
               >
                 Sign Up
               </Button>
-              
+
               <Button
                 component={Link}
                 to="/signin"
@@ -282,63 +268,18 @@ export default function Header() {
               >
                 Sign In
               </Button>
-              
-              {/* User Profile - Could be conditionally rendered based on auth state */}
-              {/* 
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-                sx={{ ml: 1 }}
-              >
-                <Avatar 
-                  sx={{ 
-                    width: 35, 
-                    height: 35,
-                    bgcolor: theme.palette.secondary.main
-                  }}
-                >
-                  <AccountCircleIcon />
-                </Avatar>
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
-                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                <MenuItem onClick={handleMenuClose}>My Account</MenuItem>
-                <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
-                <Divider />
-                <MenuItem onClick={handleMenuClose}>Sign Out</MenuItem>
-              </Menu>
-              */}
             </Box>
           )}
         </Toolbar>
       </Container>
-      
+
       {/* Mobile Drawer */}
       <Drawer
         anchor="left"
         open={drawerOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile
+          keepMounted: true,
         }}
         sx={{
           display: { xs: "block", md: "none" },
