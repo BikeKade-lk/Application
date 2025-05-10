@@ -295,21 +295,21 @@ export default function ResetPassword() {
             />
 
             <Button
-              fullWidth
-              type="submit"
               variant="contained"
               color="primary"
+              fullWidth
+              size="large"
+              onClick={handleSubmit}
               sx={{
-                mt: 3,
+                mt: 2,
+                mb: 2,
                 py: 1.5,
-                bgcolor: "#3f51b5",
                 borderRadius: 1,
                 textTransform: "none",
                 fontWeight: 600,
-                boxShadow: "0 4px 12px rgba(63,81,181,0.2)",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                 "&:hover": {
-                  bgcolor: "#303f9f",
-                  boxShadow: "0 6px 16px rgba(63,81,181,0.3)",
+                  boxShadow: "0 6px 16px rgba(0,0,0,0.15)",
                 },
               }}
             >
