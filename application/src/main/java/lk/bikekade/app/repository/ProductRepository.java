@@ -9,8 +9,10 @@ import lk.bikekade.app.model.User;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findByUser(User user);
+
     List<Product> findByUserUname(String username);
+
     List<Product> findByUserId(int userId);
-//    List<Product> findByCreatedAtBefore(LocalDateTime cutoff);
-	List<Product> findByCreatedAtBefore(LocalDateTime cutoffDate);
+
+    List<Product> findByCreatedAtBefore(LocalDateTime cutoffDate);
 }

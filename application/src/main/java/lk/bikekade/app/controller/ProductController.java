@@ -19,7 +19,7 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-    
+
     @Autowired
     private UserService userService;
 
@@ -32,14 +32,14 @@ public class ProductController {
             return productService.saveProduct(product);
         }
     }
-    
+
     // CREATE with username
     @PostMapping("/user/{username}/add")
     public ResponseEntity<?> addProductForUser(@PathVariable String username, @RequestBody Product product) {
         try {
             User user = userService.getUserByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
-            
+
             Product savedProduct = productService.saveProduct(product, user);
             return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -52,13 +52,13 @@ public class ProductController {
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
-    
+
     // READ ALL BY USER ID
     @GetMapping("/user/{userId}")
     public List<Product> getProductsByUserId(@PathVariable int userId) {
         return productService.getProductsByUserId(userId);
     }
-    
+
     // READ ALL BY USERNAME
     @GetMapping("/user/name/{username}")
     public List<Product> getProductsByUsername(@PathVariable String username) {
@@ -75,14 +75,14 @@ public class ProductController {
     // UPDATE
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProduct(
-            @PathVariable int id, 
+            @PathVariable int id,
             @RequestBody Product product,
             @RequestParam(required = false) Integer userId) {
-        
+
         if (userId != null && !productService.userOwnsProduct(userId, id)) {
             return new ResponseEntity<>("User does not own this product", HttpStatus.FORBIDDEN);
         }
-        
+
         try {
             Product updated = productService.updateProduct(id, product);
             return new ResponseEntity<>(updated, HttpStatus.OK);
@@ -96,11 +96,11 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(
             @PathVariable int id,
             @RequestParam(required = false) Integer userId) {
-        
+
         if (userId != null && !productService.userOwnsProduct(userId, id)) {
             return new ResponseEntity<>("User does not own this product", HttpStatus.FORBIDDEN);
         }
-        
+
         try {
             productService.deleteProduct(id);
             return new ResponseEntity<>("Product with ID " + id + " has been deleted", HttpStatus.OK);

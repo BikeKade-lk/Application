@@ -23,47 +23,43 @@ public class Product {
     private String description;
 
     private int price;
-    
+
     @Column(length = 20)
     private String productType;
-    
+
     @Column(length = 50)
     private String brand;
-    
+
     @Column(length = 50)
     private String partType;
-    
+
     @Column(length = 50)
     private String bikeModel;
-    
+
     @CreationTimestamp
     private LocalDateTime createdAt;
-    
-    // Add user relationship
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Default constructor
     public Product() {
         this.productType = "accessory";
     }
 
-    // Existing constructors
-    public Product(int id, String name, String image, String description, int price, 
+    public Product(int id, String name, String image, String description, int price,
             String productType, String brand, String partType, String bikeModel) {
-  this.id = id;
-  this.name = name;
-  this.image = image;
-  this.description = description;
-  this.price = price;
-  this.productType = productType;
-  this.brand = brand;
-  this.partType = partType;
-  this.bikeModel = bikeModel;
-}
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.description = description;
+        this.price = price;
+        this.productType = productType;
+        this.brand = brand;
+        this.partType = partType;
+        this.bikeModel = bikeModel;
+    }
 
-    // Add user getter and setter
     public User getUser() {
         return user;
     }
@@ -72,35 +68,78 @@ public class Product {
         this.user = user;
     }
 
- // Existing getters and setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getImage() { return image; }
-    public void setImage(String image) { this.image = image; }
+    public String getName() {
+        return name;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public int getPrice() { return price; }
-    public void setPrice(int price) { this.price = price; }
-    
-    // New getters and setters for product type functionality
-    public String getProductType() { return productType; }
-    public void setProductType(String productType) { this.productType = productType; }
-    
-    public String getBrand() { return brand; }
-    public void setBrand(String brand) { this.brand = brand; }
-    
-    public String getPartType() { return partType; }
-    public void setPartType(String partType) { this.partType = partType; }
-    
-    public String getBikeModel() { return bikeModel; }
-    public void setBikeModel(String bikeModel) { this.bikeModel = bikeModel; }
-    
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getPartType() {
+        return partType;
+    }
+
+    public void setPartType(String partType) {
+        this.partType = partType;
+    }
+
+    public String getBikeModel() {
+        return bikeModel;
+    }
+
+    public void setBikeModel(String bikeModel) {
+        this.bikeModel = bikeModel;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }

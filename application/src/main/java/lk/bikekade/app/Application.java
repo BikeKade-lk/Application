@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"lk.bikekade.app"})
+@ComponentScan(basePackages = { "lk.bikekade.app" })
 @EntityScan("lk.bikekade.app.model")
 @EnableJpaRepositories("lk.bikekade.app.repository")
 @EnableScheduling

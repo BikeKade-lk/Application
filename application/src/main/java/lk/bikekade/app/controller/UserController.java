@@ -39,7 +39,7 @@ public class UserController {
         return userService.getUserById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));
     }
-    
+
     // READ ONE BY USERNAME
     @GetMapping("/name/{username}")
     public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
@@ -64,29 +64,30 @@ public class UserController {
         return "User with ID " + id + " has been deleted";
     }
 
-    // LOGIN with more detailed response
+    // LOGIN
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User loginRequest) {
         Optional<User> user = userService.loginUser(loginRequest.getUname(), loginRequest.getPassword());
-        
+
         if (user.isPresent()) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("userId", user.get().getId());
             response.put("username", user.get().getUname());
-            response.put("fullName", user.get().getFname() + " " + 
-                         (user.get().getLname() != null ? user.get().getLname() : ""));
-            
+            response.put("fullName", user.get().getFname() + " " +
+                    (user.get().getLname() != null ? user.get().getLname() : ""));
+
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
             response.put("message", "Invalid username or password");
-            
+
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
- // RESET PASSWORD
+
+    // RESET PASSWORD
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> payload) {
         String identifier = payload.get("identifier");
@@ -102,8 +103,8 @@ public class UserController {
         }
 
         User user = userOptional.get();
-        user.setPassword(newPassword); // You can add password hashing here if needed
-        userService.saveUser(user); // Use save to persist the updated password
+        user.setPassword(newPassword);
+        userService.saveUser(user);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
@@ -111,5 +112,5 @@ public class UserController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
+
 }

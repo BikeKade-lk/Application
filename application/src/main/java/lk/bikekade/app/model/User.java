@@ -19,16 +19,14 @@ public class User {
     private String pno;
     private String address;
     private String password;
-    
-    // Add products relationship
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore  // To prevent circular reference in JSON
+    @JsonIgnore
     private List<Product> products = new ArrayList<>();
 
     public User() {
     }
 
-    // Existing getters and setters...    
     public int getId() {
         return id;
     }
@@ -76,7 +74,7 @@ public class User {
     public void setAddress(String address) {
         this.address = address;
     }
-    
+
     public String getPassword() {
         return password;
     }
@@ -85,7 +83,6 @@ public class User {
         this.password = password;
     }
 
-    // Add products getter and setter
     public List<Product> getProducts() {
         return products;
     }
@@ -93,14 +90,12 @@ public class User {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
-    
-    // Helper method to add a product
+
     public void addProduct(Product product) {
         products.add(product);
         product.setUser(this);
     }
-    
-    // Helper method to remove a product
+
     public void removeProduct(Product product) {
         products.remove(product);
         product.setUser(null);
