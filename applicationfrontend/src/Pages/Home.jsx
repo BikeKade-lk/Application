@@ -6,12 +6,10 @@ import {
   Container,
   Paper,
   Divider,
-  Grid,
   Card,
   CardContent,
   CardMedia,
   useTheme,
-  useMediaQuery,
   alpha,
 } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
@@ -42,7 +40,7 @@ export default function Home() {
         setCurrentImageIndex(nextImageIndex);
         setNextImageIndex((nextImageIndex + 1) % bgImages.length);
         setIsTransitioning(false);
-      }, 1000); // Match this with the fade duration in CSS
+      }, 1000);
     }, 10000);
 
     return () => clearInterval(intervalId);
@@ -50,7 +48,6 @@ export default function Home() {
 
   const navigate = useNavigate();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
@@ -76,8 +73,8 @@ export default function Home() {
             zIndex: 1,
           }}
         />
-        
-        {/* Next image - shown during transition */}
+
+        {/* Next image */}
         <Box
           sx={{
             backgroundImage: `url(${bgImages[nextImageIndex]})`,
@@ -93,8 +90,8 @@ export default function Home() {
             transition: "opacity 1s ease-in-out",
           }}
         />
-        
-        {/* Dark overlay for better text readability */}
+
+        {/* Dark overlay */}
         <Box
           sx={{
             position: "absolute",
@@ -444,7 +441,7 @@ export default function Home() {
               component="h2"
               sx={{ mb: 3, fontWeight: 700 }}
             >
-              Ready to Find Your Perfect Part?
+              Ready to Sell Your Perfect Part?
             </Typography>
             <Typography
               variant="body1"
@@ -452,7 +449,7 @@ export default function Home() {
             >
               Join thousands of satisfied riders who found exactly what they
               needed on BikeKade.lk. Sign up today and become part of Sri
-              Lanka's largest dirt bike community.
+              Lanka's largest dirt bike parts and accessories marketplace.
             </Typography>
             <Button
               variant="contained"
