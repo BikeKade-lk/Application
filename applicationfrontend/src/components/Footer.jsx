@@ -146,7 +146,7 @@ export default function Footer() {
               +94 11 234 5678
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-              123 Main Street, Colombo 10, Sri Lanka
+              123 Main Street, Kurunegala, Sri Lanka
             </Typography>
           </Grid>
 
