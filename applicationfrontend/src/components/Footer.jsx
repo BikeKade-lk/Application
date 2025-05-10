@@ -61,7 +61,7 @@ export default function Footer() {
             </Box>
             <Typography variant="body2" color="text.secondary" paragraph>
               The ultimate destination for dirt bike enthusiasts in Sri Lanka.
-              We connect buyers and sellers of high-quality dirt bike parts and
+              We connect buyers and sellers of high quality dirt bike parts and
               accessories.
             </Typography>
             <Box sx={{ mt: 3 }}>
