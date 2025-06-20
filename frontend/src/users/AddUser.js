@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React,{useState} from 'react'
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom';
 
 export default function AddUser() {
     let navigate=useNavigate();
@@ -52,7 +52,7 @@ export default function AddUser() {
                 </div>
                 <button type="submit" className="btn btn-outline-primary"> Submit </button>
 
-                <button type="reset" className="btn btn-outline-danger mx-2"> Cancel </button>
+                <Link  className="btn btn-outline-danger mx-2" to="/"> Cancel </Link>
               </form>
             </div>
         </div>
