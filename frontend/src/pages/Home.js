@@ -1,10 +1,12 @@
 import React ,{useEffect,useState} from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link,useParams } from "react-router-dom";
 
 export default function Home() {
 
   const[users,setUsers]=useState([])
+  
+  const{id}=useParams()
 
   useEffect(()=>{
     loadUsers();
@@ -14,6 +16,11 @@ export default function Home() {
         const result = await axios.get("http://localhost:8080/users");
         setUsers(result.data);
   };
+
+  const deleteUser=async (id)=>{
+    await axios.delete(`http://localhost:8080/user/${id}`)
+    loadUsers()
+  }
   return (
     <div className="container">
       <div className="py-4">
@@ -43,7 +50,9 @@ export default function Home() {
                 <Link className="btn btn-outline-primary mx-2"
                   to={`/edituser/${users.id}`}
                 >Edit</Link>
-                <button className="btn btn-danger mx-2">Delete</button>
+                <button className="btn btn-danger mx-2"
+                  onClick={()=>deleteUser(users.id)}
+                >Delete</button>
               </td>
             </tr>
                 ))
