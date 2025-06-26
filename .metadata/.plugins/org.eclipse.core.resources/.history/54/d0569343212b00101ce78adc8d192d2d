@@ -1,0 +1,15 @@
+package lk.bikekade.app.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import lk.bikekade.app.model.Product;
+import lk.bikekade.app.repository.ProductRepository;
+
+public class ProductServiceImpl implements ProductService {
+	@Autowired
+	private ProductRepository productRepository;
+	
+	@Override
+	public Product saveProduct(Product product) {
+		return productRepository.save(product);
+	}
+}

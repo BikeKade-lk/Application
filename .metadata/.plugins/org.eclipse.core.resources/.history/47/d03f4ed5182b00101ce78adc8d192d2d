@@ -1,0 +1,5 @@
+package lk.bikekade.app.service;
+
+public class ProductService {
+
+}

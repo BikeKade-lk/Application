@@ -1,0 +1,5 @@
+package lk.bikekade.app.repository;
+
+public class UserRepository {
+
+}

@@ -1,0 +1,60 @@
+package lk.bikekade.app.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "products")
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String image;
+
+    @Column(length = 1000)
+    private String description;
+
+    private int price;
+    
+    @Column(length = 20)
+    private String productType;
+    
+    @Column(length = 50)
+    private String brand;
+    
+    @Column(length = 50)
+    private String partType;
+    
+    @Column(length = 50)
+    private String bikeModel;
+    
+    // Add user relationship
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    // Default constructor
+    public Product() {
+        this.productType = "accessory";
+    }
+
+    // Existing constructors
+    // ...
+
+    // Add user getter and setter
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    // Existing getters and setters...
+}

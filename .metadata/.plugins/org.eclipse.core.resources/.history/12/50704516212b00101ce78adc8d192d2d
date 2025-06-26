@@ -1,0 +1,5 @@
+package lk.bikekade.app.controller;
+
+public class ProductController {
+
+}

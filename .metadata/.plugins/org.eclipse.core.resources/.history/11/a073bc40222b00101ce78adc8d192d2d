@@ -1,0 +1,7 @@
+package lk.bikekade.app.service;
+
+import lk.bikekade.app.model.Product;
+
+public interface ProductService {
+	public Product saveProduct(Product product);
+}

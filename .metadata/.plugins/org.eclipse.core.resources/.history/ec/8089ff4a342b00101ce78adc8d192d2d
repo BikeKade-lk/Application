@@ -1,0 +1,5 @@
+package lk.bikekade.app.exception;
+
+public class GlobalExceptionHandler {
+
+}
