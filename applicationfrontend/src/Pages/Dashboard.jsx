@@ -35,6 +35,7 @@ export default function Dashboard() {
   });
 
   const API_URL = "http://localhost:8080/product";
+  const USER_API_URL = "http://localhost:8080/user";
 
   useEffect(() => {
     const userInfo = localStorage.getItem("user");
@@ -49,9 +50,23 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (user) {
+      const fetchUserProducts = async () => {
+        setLoading(true);
+        try {
+          const response = await axios.get(
+            `${API_URL}/user/name/${user.username}`
+          );
+          setProducts(response.data);
+        } catch (error) {
+          console.error("Error fetching products:", error);
+          showAlert("Failed to load products. Please try again.", "error");
+        } finally {
+          setLoading(false);
+        }
+      };
       fetchUserProducts();
     }
-  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user]);
 
   function showAlert(message, severity = "info") {
     setAlertInfo({ open: true, message, severity });
@@ -173,7 +188,8 @@ export default function Dashboard() {
         showAlert("Product added successfully", "success");
       }
       handleClose();
-      fetchUserProducts();
+      const response = await axios.get(`${API_URL}/user/name/${user.username}`);
+      setProducts(response.data);
     } catch (error) {
       console.error("Error saving product:", error);
       showAlert(
@@ -194,7 +210,8 @@ export default function Dashboard() {
     try {
       await axios.delete(`${API_URL}/delete/${id}?userId=${user.id}`);
       showAlert("Product deleted successfully", "success");
-      fetchUserProducts();
+      const response = await axios.get(`${API_URL}/user/name/${user.username}`);
+      setProducts(response.data);
     } catch (error) {
       console.error("Error deleting product:", error);
       showAlert("Failed to delete product. Please try again.", "error");
@@ -203,16 +220,72 @@ export default function Dashboard() {
     }
   }
 
-  async function fetchUserProducts() {
-    if (!user) return;
+  async function handleDeleteUser(userId) {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone and will permanently delete all your data including products."
+    );
+
+    if (!confirmDelete) return;
+
+    const finalConfirm = window.confirm(
+      "This is your final warning. Deleting your account will:\n\n" +
+        "• Permanently delete your profile\n" +
+        "• Remove all your products\n" +
+        "• Delete all associated data\n\n" +
+        "Type 'DELETE' in the next prompt to confirm."
+    );
+
+    if (!finalConfirm) return;
+
+    const userConfirmation = prompt(
+      "To confirm account deletion, please type 'DELETE' (in capital letters):"
+    );
+
+    if (userConfirmation !== "DELETE") {
+      showAlert(
+        "Account deletion cancelled. Confirmation text did not match.",
+        "info"
+      );
+      return;
+    }
 
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/user/name/${user.username}`);
-      setProducts(response.data);
+      const token = localStorage.getItem("token");
+
+      const response = await axios.delete(`${USER_API_URL}/delete/${userId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
+
+      if (response.status === 200) {
+        showAlert(
+          "Account deleted successfully. You will be redirected to the sign-in page.",
+          "success"
+        );
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setTimeout(() => {
+          navigate("/signin");
+        }, 2000);
+      } else {
+        throw new Error("Unexpected response status");
+      }
     } catch (error) {
-      console.error("Error fetching products:", error);
-      showAlert("Failed to load products. Please try again.", "error");
+      console.error("Error deleting account:", error);
+      let errorMessage =
+        "An error occurred while deleting your account. Please try again.";
+      if (error.response) {
+        errorMessage =
+          error.response.data?.message ||
+          `Failed to delete account: ${error.response.status} ${error.response.statusText}`;
+      } else if (error.request) {
+        errorMessage =
+          "Network error. Please check your connection and try again.";
+      }
+      showAlert(errorMessage, "error");
     } finally {
       setLoading(false);
     }
@@ -220,6 +293,7 @@ export default function Dashboard() {
 
   function handleLogout() {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     navigate("/signin");
   }
 
@@ -246,23 +320,20 @@ export default function Dashboard() {
         minHeight: "100vh",
       }}
     >
-      {/* App Bar */}
       <DashboardHeader
         user={user}
         onAddProduct={() => handleOpen()}
         onLogout={handleLogout}
+        onDeleteUser={handleDeleteUser}
       />
 
       <Box sx={{ flexGrow: 1, mb: 2 }}>
-        {/* Product Table */}
         <ProductTable
           products={products}
           loading={loading}
           onEdit={handleOpen}
           onDelete={handleDelete}
         />
-
-        {/* Dialog for Add/Edit */}
         <ProductFormDialog
           open={open}
           onClose={handleClose}
@@ -274,7 +345,6 @@ export default function Dashboard() {
           imagePreview={imagePreview}
           loading={loading}
         />
-
         <CustomAlert alertInfo={alertInfo} onClose={handleCloseAlert} />
       </Box>
       <Footer />
